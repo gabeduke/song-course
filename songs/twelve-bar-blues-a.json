@@ -1,0 +1,402 @@
+{
+  "format": 1,
+  "id": "twelve-bar-blues-a",
+  "title": "12-Bar Shuffle in A",
+  "artist": "Blues standard",
+  "key": "A",
+  "scale": "mixolydian",
+  "meter": "4/4",
+  "tempo": 92,
+  "swing": 0.33,
+  "summary": "The form every jam session knows. Drill the boogie shuffle riff, then connect the minor pentatonic boxes and learn when to switch to the major pentatonic.",
+  "skills": [
+    "Shuffle feel",
+    "12-bar form",
+    "Boogie riff",
+    "Minor pentatonic boxes",
+    "Major vs minor pentatonic"
+  ],
+  "notes": "Generic blues form. All parts are original practice material.",
+  "parts": [
+    {
+      "id": "drums",
+      "instrument": "drums"
+    },
+    {
+      "id": "bass",
+      "instrument": "bass"
+    },
+    {
+      "id": "rhythm",
+      "name": "Rhythm guitar",
+      "instrument": "guitar"
+    },
+    {
+      "id": "lead",
+      "name": "Lead guitar",
+      "instrument": "guitar",
+      "start": "off"
+    },
+    {
+      "id": "keys",
+      "instrument": "keys",
+      "volume": 0.5
+    }
+  ],
+  "voicings": {
+    "A7": "x02020",
+    "D7": "xx0212",
+    "E7": "020100"
+  },
+  "sections": [
+    {
+      "id": "chorus",
+      "name": "12-bar chorus",
+      "chords": "A7 | D7 | A7 | A7 | D7 | D7 | A7 | A7 | E7 | D7 | A7 | E7",
+      "parts": {
+        "drums": [
+          {
+            "id": "shuffle",
+            "name": "Shuffle",
+            "pattern": {
+              "hat": "x.x.x.x.x.x.x.x.",
+              "kick": "x.......x.......",
+              "snare": "....X.......X..."
+            }
+          },
+          {
+            "id": "train",
+            "name": "Train beat",
+            "pattern": {
+              "snare": "x.o.X.o.x.o.X.o.",
+              "kick": "x.......x......."
+            }
+          },
+          {
+            "id": "turnaround",
+            "name": "Shuffle with turnaround fill",
+            "pattern": {
+              "hat": "x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.........",
+              "kick": "x.......x.......",
+              "snare": "....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x.......x... | ....x...x.x.X.X.",
+              "crash": "x............... | ................ | ................ | ................ | ................ | ................ | ................ | ................ | ................ | ................ | ................ | ................"
+            }
+          }
+        ],
+        "bass": [
+          {
+            "id": "walking",
+            "name": "Walking boogie",
+            "steps": "R 3 5 6 b7 6 5 3"
+          },
+          {
+            "id": "root-fifth",
+            "name": "Root and fifth",
+            "steps": "R . 5 . R . 5 ."
+          }
+        ],
+        "rhythm": [
+          {
+            "id": "boogie",
+            "name": "Boogie shuffle",
+            "type": "degrees",
+            "steps": "R+5 R+5 R+6 R+6 R+5 R+5 R+6 R+6"
+          },
+          {
+            "id": "stabs",
+            "name": "Seventh-chord stabs",
+            "type": "strum",
+            "pattern": "..D...D."
+          },
+          {
+            "id": "full",
+            "name": "Shuffle strum",
+            "type": "strum",
+            "pattern": "DuDuDuDu"
+          }
+        ],
+        "lead": [
+          {
+            "id": "box1",
+            "name": "Box 1 lick",
+            "type": "notes",
+            "length": 32,
+            "notes": [
+              {
+                "t": 0,
+                "s": 2,
+                "f": 8,
+                "d": 2
+              },
+              {
+                "t": 2,
+                "s": 1,
+                "f": 5,
+                "d": 4
+              },
+              {
+                "t": 6,
+                "s": 2,
+                "f": 8,
+                "d": 2
+              },
+              {
+                "t": 8,
+                "s": 2,
+                "f": 5,
+                "d": 2
+              },
+              {
+                "t": 10,
+                "s": 3,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 12,
+                "s": 3,
+                "f": 5,
+                "d": 2
+              },
+              {
+                "t": 14,
+                "s": 4,
+                "f": 7,
+                "d": 10
+              }
+            ]
+          },
+          {
+            "id": "major-pent",
+            "name": "Major pentatonic lick",
+            "type": "notes",
+            "length": 32,
+            "notes": [
+              {
+                "t": 0,
+                "s": 2,
+                "f": 5,
+                "d": 2
+              },
+              {
+                "t": 2,
+                "s": 2,
+                "f": 2,
+                "d": 2
+              },
+              {
+                "t": 4,
+                "s": 3,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 6,
+                "s": 3,
+                "f": 2,
+                "d": 4
+              },
+              {
+                "t": 10,
+                "s": 4,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 12,
+                "s": 3,
+                "f": 2,
+                "d": 12
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "defaults": {
+    "keys": [
+      {
+        "id": "comp",
+        "name": "Shuffle comp",
+        "type": "comp",
+        "pattern": ".x.x.x.x",
+        "leftHand": false
+      },
+      {
+        "id": "boogie-lh",
+        "name": "Boogie left hand",
+        "type": "hands",
+        "left": "R 3 5 6 b7 6 5 3",
+        "leftGrid": "8",
+        "right": "..x...x.",
+        "rightGrid": "8"
+      },
+      {
+        "id": "pad",
+        "name": "Pad",
+        "type": "comp",
+        "grid": "4",
+        "pattern": "x---"
+      }
+    ]
+  },
+  "arrangement": [
+    {
+      "section": "chorus",
+      "repeat": 3
+    }
+  ],
+  "lessons": [
+    {
+      "id": "shuffle",
+      "title": "Feel the shuffle",
+      "goal": "Play the boogie riff with a lazy, swung eighth note.",
+      "body": [
+        "Shuffle eighths are long-short, like a triplet with the middle note left out. Say \"HUMP-ty DUMP-ty\" in time with the hi-hat.",
+        "The riff is a two-note power chord where the top note rocks between the fifth and sixth. On A it's the open A string; on D, the D string or 5th fret of the A; on E, the open low E."
+      ],
+      "steps": [
+        "Play along with the boogie shuffle at 80 bpm, palm-muting lightly.",
+        "Mute rhythm guitar and keep it going through all twelve bars."
+      ],
+      "setup": {
+        "section": "chorus",
+        "tempo": 80,
+        "select": {
+          "rhythm": "boogie",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "chord"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "form",
+      "title": "Know where you are in the twelve bars",
+      "goal": "Call out every chord change before it happens.",
+      "body": [
+        "This chorus uses a quick change: bar 2 goes to D7 and back. Then four bars of A, two of D, two of A, and the turnaround: E7, D7, A7, E7.",
+        "Watch the arrangement strip under the fretboard and say the next chord out loud a bar early."
+      ],
+      "steps": [
+        "Play the seventh-chord stabs on 2 and 4.",
+        "Turn the stabs off and play them with your eyes off the screen."
+      ],
+      "setup": {
+        "section": "chorus",
+        "tempo": 92,
+        "select": {
+          "rhythm": "stabs",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "box1",
+      "title": "Box 1 and its neighbours",
+      "goal": "Play A minor pentatonic box 1 at the 5th fret, then connect to box 2.",
+      "body": [
+        "Box 1 is the shape you know, root on the 5th fret of the low E. Box 2 starts on the C at the 8th fret and overlaps box 1 by a whole column of notes.",
+        "Use the shared notes as bridges: slide from the 7th to the 9th fret on the G string to move up a box."
+      ],
+      "steps": [
+        "Loop the box 1 lick and learn it.",
+        "Switch the fretboard to position 2 and find the same notes there.",
+        "Improvise using only the notes both boxes share, then spread out."
+      ],
+      "setup": {
+        "section": "chorus",
+        "tempo": 88,
+        "select": {
+          "lead": "box1"
+        },
+        "fretboard": {
+          "layer": "scale",
+          "scale": "minorPentatonic",
+          "position": 1
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "major-minor",
+      "title": "Sweet side, sour side",
+      "goal": "Hear the difference between major and minor pentatonic over A7.",
+      "body": [
+        "Minor pentatonic has a C, which rubs against the C# in A7. That bluesy rub is the sour side. Major pentatonic uses C# instead and sounds sweet and country-ish.",
+        "Shortcut: the A major pentatonic box is the A minor box slid down three frets, to the 2nd fret."
+      ],
+      "steps": [
+        "Play the major pentatonic lick and compare it to the box 1 lick.",
+        "Over A7 try major, over D7 and E7 try minor, and listen to the switch."
+      ],
+      "setup": {
+        "section": "chorus",
+        "tempo": 88,
+        "select": {
+          "lead": "major-pent"
+        },
+        "fretboard": {
+          "layer": "scale",
+          "scale": "majorPentatonic",
+          "position": 5
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "keys-boogie",
+      "instrument": "keys",
+      "title": "Boogie-woogie left hand",
+      "goal": "Walk the boogie line in the left hand through all twelve bars.",
+      "body": [
+        "Root, third, fifth, sixth, flat seventh, and back down, swung. It's the same line the bass plays, and it moves to D and E with the chords.",
+        "The right hand only stabs on beats 2 and 4, so you can focus on the left."
+      ],
+      "steps": [
+        "Left hand alone over A for a few minutes.",
+        "Follow the changes to D and E.",
+        "Add the right-hand stabs."
+      ],
+      "setup": {
+        "section": "chorus",
+        "tempo": 80,
+        "select": {
+          "keys": "boogie-lh",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    },
+    {
+      "id": "drums-shuffle",
+      "instrument": "drums",
+      "title": "Shuffle and the turnaround",
+      "goal": "Hear how a fill marks the end of the twelve bars.",
+      "body": [
+        "The shuffle swings the hi-hat's offbeats late. In the last bar the hats stop and the snare plays a short roll, and a crash marks the top of the next chorus. Drummers use fills like this to keep the band in the form."
+      ],
+      "steps": [
+        "Solo drums with the turnaround fill and count the bars.",
+        "In Capture, set 2 bars and build a fill for bars 11 and 12."
+      ],
+      "setup": {
+        "section": "chorus",
+        "tempo": 92,
+        "solo": "drums",
+        "select": {
+          "drums": "turnaround"
+        }
+      }
+    }
+  ]
+}

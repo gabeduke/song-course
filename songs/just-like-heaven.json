@@ -1,0 +1,633 @@
+{
+  "format": 1,
+  "id": "just-like-heaven",
+  "title": "Just Like Heaven",
+  "artist": "The Cure",
+  "key": "A",
+  "scale": "major",
+  "meter": "4/4",
+  "tempo": 112,
+  "originalTempo": 152,
+  "summary": "A–E–Bm–D, one bar each, at a gallop. Great for open-chord changes, then for learning to voice-lead with triads so the chords flow into each other.",
+  "skills": [
+    "Open chord changes",
+    "Bm without fear",
+    "Triads on two string sets",
+    "Driving eighth-note strum",
+    "Guide-tone melodies"
+  ],
+  "notes": "Chord progression and practice parts only. The melody line here is an original guide-tone exercise, not the song's riff or vocal.",
+  "parts": [
+    {
+      "id": "drums",
+      "instrument": "drums"
+    },
+    {
+      "id": "bass",
+      "instrument": "bass"
+    },
+    {
+      "id": "rhythm",
+      "name": "Rhythm guitar",
+      "instrument": "guitar"
+    },
+    {
+      "id": "lead",
+      "name": "Lead guitar",
+      "instrument": "guitar",
+      "start": "off"
+    },
+    {
+      "id": "keys",
+      "instrument": "keys",
+      "volume": 0.55
+    }
+  ],
+  "voicings": {
+    "A": "x02220",
+    "E": "022100",
+    "Bm": "x24432",
+    "D": "xx0232"
+  },
+  "sections": [
+    {
+      "id": "verse",
+      "name": "Verse",
+      "chords": "A | E | Bm | D",
+      "parts": {
+        "drums": [
+          {
+            "id": "driving",
+            "name": "Driving",
+            "pattern": {
+              "hat": "x.x.x.x.x.x.x.x.",
+              "kick": "x...x...x.x.x...",
+              "snare": "....X.......X..."
+            }
+          },
+          {
+            "id": "floor-tom",
+            "name": "Floor-tom pulse",
+            "pattern": {
+              "tom": "x.x.x.x.x.x.x.x.",
+              "kick": "x.......x.......",
+              "snare": "....X.......X..."
+            }
+          },
+          {
+            "id": "build-fill",
+            "name": "Driving with a fill",
+            "pattern": {
+              "hat": "x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.x.x.x.x. | x.x.x.x.........",
+              "kick": "x...x...x.x.x... | x...x...x.x.x... | x...x...x.x.x... | x...x...x.......",
+              "snare": "....x.......x... | ....x.......x... | ....x.......x... | ....x...x.x.XXXX",
+              "crash": "x............... | ................ | ................ | ................"
+            }
+          }
+        ],
+        "bass": [
+          {
+            "id": "eighths",
+            "name": "Driving eighths",
+            "steps": "R R R R R R R R"
+          },
+          {
+            "id": "octaves",
+            "name": "Octave bounce",
+            "steps": "R 8 R 8 R 8 R 8"
+          },
+          {
+            "id": "melodic",
+            "name": "Melodic",
+            "steps": "R . 5 8 . 5 3 5"
+          }
+        ],
+        "rhythm": [
+          {
+            "id": "open",
+            "name": "Open chords",
+            "type": "strum",
+            "pattern": "DuDuDuDu"
+          },
+          {
+            "id": "triads-top",
+            "name": "Triads, top strings",
+            "type": "strum",
+            "pattern": "DuDuDuDu",
+            "voicings": {
+              "A": "xxx655",
+              "E": "xxx454",
+              "Bm": "xxx432",
+              "D": "xxx232"
+            }
+          },
+          {
+            "id": "triads-mid",
+            "name": "Triads, middle strings",
+            "type": "strum",
+            "pattern": "DuDuDuDu",
+            "voicings": {
+              "A": "xx765x",
+              "E": "xx645x",
+              "Bm": "xx443x",
+              "D": "xx423x"
+            }
+          },
+          {
+            "id": "picked",
+            "name": "Picked triads",
+            "type": "arpeggio",
+            "pattern": "3 2 1 2 3 2 1 2",
+            "voicings": {
+              "A": "xxx655",
+              "E": "xxx454",
+              "Bm": "xxx432",
+              "D": "xxx232"
+            }
+          }
+        ],
+        "lead": [
+          {
+            "id": "guide-tones",
+            "name": "Guide-tone line",
+            "type": "notes",
+            "length": 64,
+            "notes": [
+              {
+                "t": 0,
+                "s": 2,
+                "f": 2,
+                "d": 6
+              },
+              {
+                "t": 6,
+                "s": 2,
+                "f": 0,
+                "d": 2
+              },
+              {
+                "t": 8,
+                "s": 3,
+                "f": 2,
+                "d": 8
+              },
+              {
+                "t": 16,
+                "s": 3,
+                "f": 1,
+                "d": 6
+              },
+              {
+                "t": 22,
+                "s": 2,
+                "f": 0,
+                "d": 2
+              },
+              {
+                "t": 24,
+                "s": 1,
+                "f": 0,
+                "d": 8
+              },
+              {
+                "t": 32,
+                "s": 2,
+                "f": 3,
+                "d": 6
+              },
+              {
+                "t": 38,
+                "s": 2,
+                "f": 2,
+                "d": 2
+              },
+              {
+                "t": 40,
+                "s": 2,
+                "f": 0,
+                "d": 8
+              },
+              {
+                "t": 48,
+                "s": 1,
+                "f": 2,
+                "d": 6
+              },
+              {
+                "t": 54,
+                "s": 1,
+                "f": 0,
+                "d": 2
+              },
+              {
+                "t": 56,
+                "s": 2,
+                "f": 3,
+                "d": 8
+              }
+            ]
+          },
+          {
+            "id": "pent-fill",
+            "name": "Melodic run",
+            "type": "notes",
+            "length": 64,
+            "notes": [
+              {
+                "t": 0,
+                "s": 2,
+                "f": 5,
+                "d": 2
+              },
+              {
+                "t": 2,
+                "s": 1,
+                "f": 5,
+                "d": 4
+              },
+              {
+                "t": 6,
+                "s": 2,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 8,
+                "s": 2,
+                "f": 5,
+                "d": 8
+              },
+              {
+                "t": 16,
+                "s": 3,
+                "f": 4,
+                "d": 4
+              },
+              {
+                "t": 20,
+                "s": 2,
+                "f": 5,
+                "d": 4
+              },
+              {
+                "t": 24,
+                "s": 3,
+                "f": 6,
+                "d": 8
+              },
+              {
+                "t": 32,
+                "s": 3,
+                "f": 4,
+                "d": 4
+              },
+              {
+                "t": 36,
+                "s": 3,
+                "f": 7,
+                "d": 4
+              },
+              {
+                "t": 40,
+                "s": 2,
+                "f": 7,
+                "d": 8
+              },
+              {
+                "t": 48,
+                "s": 1,
+                "f": 5,
+                "d": 4
+              },
+              {
+                "t": 52,
+                "s": 2,
+                "f": 7,
+                "d": 4
+              },
+              {
+                "t": 56,
+                "s": 3,
+                "f": 7,
+                "d": 8
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "build",
+      "name": "Build",
+      "chords": "A | E | Bm | D",
+      "parts": {
+        "drums": [
+          "verse"
+        ],
+        "bass": [
+          "verse"
+        ],
+        "rhythm": [
+          {
+            "id": "sixteenths",
+            "name": "Sixteenth push",
+            "type": "strum",
+            "grid": "16",
+            "pattern": "D.duD.duD.duDudu",
+            "voicings": {
+              "A": "xxx655",
+              "E": "xxx454",
+              "Bm": "xxx432",
+              "D": "xxx232"
+            }
+          },
+          "verse"
+        ],
+        "lead": "verse"
+      }
+    }
+  ],
+  "defaults": {
+    "keys": [
+      {
+        "id": "bells",
+        "name": "Bell arpeggio",
+        "type": "degrees",
+        "range": [
+          60,
+          71
+        ],
+        "steps": "R 3 5 8 5 3 5 3"
+      },
+      {
+        "id": "drive",
+        "name": "Left-hand drive, right-hand pad",
+        "type": "hands",
+        "left": "R R R R R R R R",
+        "leftGrid": "8",
+        "right": "x-------",
+        "rightGrid": "8"
+      },
+      {
+        "id": "voice-led",
+        "name": "Voice-led chords",
+        "type": "comp",
+        "pattern": "x.x.x.x.",
+        "leftHand": false
+      },
+      {
+        "id": "pad",
+        "name": "Pad",
+        "type": "comp",
+        "grid": "4",
+        "pattern": "x---"
+      }
+    ]
+  },
+  "arrangement": [
+    {
+      "section": "verse",
+      "repeat": 2
+    },
+    {
+      "section": "build",
+      "repeat": 2
+    }
+  ],
+  "lessons": [
+    {
+      "id": "open-changes",
+      "title": "Four open chords at speed",
+      "goal": "Change A, E, Bm, D on every downbeat at 100 bpm.",
+      "body": [
+        "Bm is the one that trips people up. Play it as the A-shape barre at the 2nd fret: it's the same move as your B chord in Fire on the Mountain, with one finger changed.",
+        "Look for anchors: from E to Bm your hand moves up, from Bm to D your third finger can stay close to the B string."
+      ],
+      "steps": [
+        "Play along at 80 bpm with the open chords variation.",
+        "Mute rhythm guitar and keep the eighths going on your own.",
+        "Step the tempo up by 8 until it gets messy, then back off one notch."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 80,
+        "select": {
+          "rhythm": "open",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "voice-leading",
+      "title": "Let the triads flow",
+      "goal": "Play the progression on the top three strings, moving as few fingers as possible.",
+      "body": [
+        "These triads all live between the 2nd and 6th frets. A and E share the note E, Bm and D share D and F#. Hold the shared notes and move only what has to move.",
+        "This is voice leading, and it's the trick that gets you out of big barre shapes."
+      ],
+      "steps": [
+        "Play \"Triads, top strings\" along with the track.",
+        "Watch the fretboard and notice which dots stay put between chords.",
+        "Try \"Picked triads\" to hear each note ring separately."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 90,
+        "select": {
+          "rhythm": "triads-top",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "triads",
+          "triadSet": "123"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "middle-strings",
+      "title": "Move it to the middle strings",
+      "goal": "Find the same progression on strings 2, 3 and 4.",
+      "body": [
+        "Same idea, one string set lower. The shapes change because of the B string's tuning, so they're worth learning separately."
+      ],
+      "steps": [
+        "Set the fretboard's string set to 2-3-4 and look at the shapes for each chord.",
+        "Play the \"Triads, middle strings\" variation along with the track.",
+        "Alternate: one pass up top, one pass in the middle."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 90,
+        "select": {
+          "rhythm": "triads-mid",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "triads",
+          "triadSet": "234"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "drive",
+      "title": "Driving strum",
+      "goal": "Accent the downbeats while keeping eighths even.",
+      "body": [
+        "Capital D is a full accented downstroke; lowercase u is a light upstroke on just the top strings. That contrast is what makes the strum gallop.",
+        "When it's comfortable, try the sixteenth push in the Build section."
+      ],
+      "steps": [
+        "Play along at 100 bpm.",
+        "Switch to the Build section and try the sixteenth push variation."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 100,
+        "select": {
+          "rhythm": "open",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "guide-tones",
+      "title": "A melody made of thirds",
+      "goal": "Hear how the third of each chord makes a melody on its own.",
+      "body": [
+        "The guide-tone line starts each bar on the chord's third: C# over A, G# over E, D over Bm, F# over D. Everything else just walks to the next one.",
+        "Switch the fretboard labels to intervals and watch for the teal 3."
+      ],
+      "steps": [
+        "Listen to the guide-tone line twice.",
+        "Mute it and play it from the tab on the Sheet page.",
+        "Improvise in A major pentatonic, but start each bar on the third."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 96,
+        "select": {
+          "lead": "guide-tones"
+        },
+        "fretboard": {
+          "layer": "chord",
+          "labels": "intervals"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "keys-drive",
+      "instrument": "keys",
+      "title": "Left-hand drive",
+      "goal": "Steady eighth-note roots in the left hand under a held right-hand chord.",
+      "body": [
+        "This is the bass player's job given to your left hand: the same note eight times per bar, perfectly even. The right hand holds the chord for the whole bar.",
+        "Keep the left hand relaxed and bounce from the wrist. Accent beat one slightly."
+      ],
+      "steps": [
+        "Left hand alone at 90 bpm.",
+        "Add the right hand, changing on each downbeat.",
+        "Mute keys and play along."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 90,
+        "select": {
+          "keys": "drive",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    },
+    {
+      "id": "keys-voice",
+      "instrument": "keys",
+      "title": "Voice leading A–E–Bm–D",
+      "goal": "Play the four chords in one hand position with shared notes held.",
+      "body": [
+        "Look at the keyboard on Part: A is A–C#–E, E is G#–B–E, Bm is B–D–F#, D is A–D–F#. E stays put from A to E, and D and F# stay put from Bm to D.",
+        "That's the same idea as the guitar triads lesson: move only the notes that have to move."
+      ],
+      "steps": [
+        "Play each change slowly and say out loud which notes stay.",
+        "Play along with Voice-led chords.",
+        "Then try the bell arpeggio on top."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 96,
+        "select": {
+          "keys": "voice-led",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    },
+    {
+      "id": "drums-drive",
+      "instrument": "drums",
+      "title": "The driving beat",
+      "goal": "Understand why this groove feels like it's running.",
+      "body": [
+        "Kick on every beat plus the 'and' of 3, snare on 2 and 4, eighth-note hats. The floor-tom version swaps hats for toms, which makes it darker and more tribal.",
+        "Every fourth bar, the fill version stops the hats and rolls the snare into the next phrase."
+      ],
+      "steps": [
+        "Solo drums and compare Driving with Floor-tom pulse.",
+        "Loop Driving with a fill and count the four-bar phrase.",
+        "In Capture, make a fill of your own for bar four."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 112,
+        "solo": "drums",
+        "select": {
+          "drums": "driving"
+        }
+      }
+    },
+    {
+      "id": "synth-bell",
+      "instrument": "synth",
+      "title": "Design a bell for the arpeggio",
+      "goal": "Make an FM bell sound and play the arpeggio part on your synth.",
+      "body": [
+        "Bells come from non-whole-number ratios. Try a modulator at 3.5 times the carrier, a fast attack, and a decay of about a second with no sustain. More modulation makes it glassier.",
+        "Mute keys, then play the bell arpeggio on your synth: root, third, fifth, octave and back down."
+      ],
+      "steps": [
+        "Set up a two-operator patch with a 1:3.5 ratio.",
+        "Shape the decay so each note rings into the next without smearing.",
+        "Mute keys and play along."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 96,
+        "mute": [
+          "keys"
+        ],
+        "select": {
+          "keys": "bells",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    }
+  ]
+}

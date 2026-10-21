@@ -1,0 +1,424 @@
+{
+  "format": 1,
+  "id": "house-of-the-rising-sun",
+  "title": "House of the Rising Sun",
+  "artist": "Traditional",
+  "key": "A",
+  "scale": "minor",
+  "meter": "6/8",
+  "tempo": 120,
+  "tempoNote": "eighth notes",
+  "summary": "Am, C, D, F and E in a rolling 6/8. The classic picked-arpeggio workout, plus a gentle push into the full F barre and some minor-chord colours.",
+  "skills": [
+    "Picked arpeggios",
+    "The F chord, easy and full barre",
+    "Minor and seventh chord colours",
+    "Harmonic minor",
+    "A minor pentatonic"
+  ],
+  "notes": "Traditional song. Parts are practice arrangements.",
+  "parts": [
+    {
+      "id": "drums",
+      "instrument": "drums",
+      "volume": 0.6
+    },
+    {
+      "id": "bass",
+      "instrument": "bass"
+    },
+    {
+      "id": "rhythm",
+      "name": "Rhythm guitar",
+      "instrument": "guitar"
+    },
+    {
+      "id": "lead",
+      "name": "Lead guitar",
+      "instrument": "guitar",
+      "start": "off"
+    },
+    {
+      "id": "keys",
+      "name": "Organ",
+      "instrument": "keys",
+      "volume": 0.5
+    }
+  ],
+  "voicings": {
+    "Am": "x02210",
+    "C": "x32010",
+    "D": "xx0232",
+    "F": "xx3211",
+    "E": "022100"
+  },
+  "sections": [
+    {
+      "id": "verse",
+      "name": "Verse",
+      "chords": "Am | C | D | F | Am | C | E | E | Am | C | D | F | Am | E | Am | E",
+      "parts": {
+        "drums": [
+          {
+            "id": "brushes",
+            "name": "Brushes",
+            "pattern": {
+              "shaker": "x.x.x.x.x.x.",
+              "kick": "x...........",
+              "snare": "......x....."
+            }
+          },
+          {
+            "id": "building",
+            "name": "Building",
+            "pattern": {
+              "ride": "x.x.x.x.x.x.",
+              "kick": "x.....x.....",
+              "snare": "......X....."
+            }
+          }
+        ],
+        "bass": [
+          {
+            "id": "roots",
+            "name": "Roots",
+            "steps": "R - - 5 - -"
+          },
+          {
+            "id": "rolling",
+            "name": "Rolling",
+            "steps": "R - 5 8 - 5"
+          }
+        ],
+        "rhythm": [
+          {
+            "id": "arpeggio",
+            "name": "Picked arpeggio",
+            "type": "arpeggio",
+            "pattern": "B 3 2 1 2 3"
+          },
+          {
+            "id": "barre-f",
+            "name": "Full F barre",
+            "type": "arpeggio",
+            "pattern": "B 3 2 1 2 3",
+            "voicings": {
+              "F": "133211"
+            }
+          },
+          {
+            "id": "sevenths",
+            "name": "Seventh colours",
+            "type": "arpeggio",
+            "pattern": "B 3 2 1 2 3",
+            "voicings": {
+              "Am": "x02010",
+              "C": "x32000",
+              "D": "xx0212",
+              "F": "xx3210",
+              "E": "020100"
+            }
+          },
+          {
+            "id": "strum",
+            "name": "6/8 strum",
+            "type": "strum",
+            "pattern": "D.DUDU"
+          }
+        ],
+        "lead": [
+          {
+            "id": "pent-fill",
+            "name": "A minor pentatonic fill",
+            "type": "notes",
+            "length": 48,
+            "notes": [
+              {
+                "t": 0,
+                "s": 1,
+                "f": 5,
+                "d": 4
+              },
+              {
+                "t": 4,
+                "s": 2,
+                "f": 8,
+                "d": 2
+              },
+              {
+                "t": 6,
+                "s": 2,
+                "f": 5,
+                "d": 4
+              },
+              {
+                "t": 10,
+                "s": 3,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 12,
+                "s": 3,
+                "f": 5,
+                "d": 6
+              },
+              {
+                "t": 18,
+                "s": 4,
+                "f": 7,
+                "d": 6
+              },
+              {
+                "t": 24,
+                "s": 4,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 26,
+                "s": 3,
+                "f": 5,
+                "d": 2
+              },
+              {
+                "t": 28,
+                "s": 3,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 30,
+                "s": 2,
+                "f": 5,
+                "d": 6
+              },
+              {
+                "t": 36,
+                "s": 2,
+                "f": 6,
+                "d": 12
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "defaults": {
+    "keys": [
+      {
+        "id": "organ",
+        "name": "Held chords",
+        "type": "comp",
+        "grid": "8",
+        "pattern": "x-----"
+      },
+      {
+        "id": "waltz",
+        "name": "Left root, right chords",
+        "type": "hands",
+        "left": "R . . 5 . .",
+        "leftGrid": "8",
+        "right": ". x x . x x",
+        "rightGrid": "8"
+      },
+      {
+        "id": "broken",
+        "name": "Broken chords",
+        "type": "degrees",
+        "range": [
+          57,
+          68
+        ],
+        "steps": "R 3 5 8 5 3"
+      }
+    ]
+  },
+  "arrangement": [
+    {
+      "section": "verse",
+      "repeat": 2
+    }
+  ],
+  "lessons": [
+    {
+      "id": "arpeggio",
+      "title": "Rolling arpeggios",
+      "goal": "Pick bass, 3, 2, 1, 2, 3 in every bar while the chord rings.",
+      "body": [
+        "Hold the whole chord shape and pick one string at a time. B in the pattern means the chord's lowest string: the A string for Am and C, the D string for D and F, the low E for E.",
+        "Count it in two big beats, ONE-and-a TWO-and-a. That rolling feel is 6/8."
+      ],
+      "steps": [
+        "Play along at 100 with the picked arpeggio.",
+        "Mute rhythm guitar and keep it rolling on your own.",
+        "Let the notes ring into each other. Don't lift fingers until the chord changes."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 100,
+        "select": {
+          "rhythm": "arpeggio",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "f-chord",
+      "title": "From easy F to the full barre",
+      "goal": "Swap the four-string F for the full barre without losing time.",
+      "body": [
+        "The easy F (xx3211) is a small barre on the top two strings. The full barre (133211) is an E-shape at the 1st fret, the hardest place on the neck to barre because the frets are widest.",
+        "Same E shape you used for the A chord in Fire on the Mountain, just slid down to the 1st fret."
+      ],
+      "steps": [
+        "Play the picked arpeggio with the easy F.",
+        "Switch to the \"Full F barre\" variation and play along.",
+        "If it buzzes, roll your index finger slightly onto its bony edge."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 96,
+        "select": {
+          "rhythm": "barre-f",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "colours",
+      "title": "Minor and seventh colours",
+      "goal": "Hear what one added note does to each chord.",
+      "body": [
+        "Am7 is Am with one finger lifted. Cmaj7 and Fmaj7 add the major seventh, D7 and E7 add the flat seventh. The progression is the same, but the mood softens.",
+        "Turn the fretboard labels to intervals to see the 7 or b7 appear in each shape."
+      ],
+      "steps": [
+        "Alternate the plain arpeggio and \"Seventh colours\" every pass.",
+        "Pick your favourite colour for each chord and mix them."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 100,
+        "select": {
+          "rhythm": "sevenths",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape",
+          "labels": "intervals"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "harmonic-minor",
+      "title": "Why E major?",
+      "goal": "See the G# that the E chord brings into A minor.",
+      "body": [
+        "In plain A minor the five chord would be Em, with a G. This song uses E major, with a G#, which pulls hard back to A. That raised seventh is called harmonic minor.",
+        "When you play melodies over the E chord, use G# instead of G."
+      ],
+      "steps": [
+        "Set the fretboard to Chord tones and watch the third over E.",
+        "Switch the scale to harmonic minor and compare it to natural minor."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 100,
+        "select": {
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "chord",
+          "labels": "intervals"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "pentatonic",
+      "title": "A minor pentatonic over the changes",
+      "goal": "Play fills from box 1 at the 5th fret.",
+      "body": [
+        "A minor pentatonic at the 5th fret is the box most guitarists know first. It works over every chord here except one note: over E, avoid the C and lean on B and E instead."
+      ],
+      "steps": [
+        "Loop the pentatonic fill and learn it from the tab.",
+        "Mute it and answer each line of the progression with your own short fill."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 100,
+        "select": {
+          "lead": "pent-fill"
+        },
+        "fretboard": {
+          "layer": "scale",
+          "scale": "minorPentatonic",
+          "position": 1
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "keys-68",
+      "instrument": "keys",
+      "title": "Two hands in 6/8",
+      "goal": "Left hand on 1 and 4, right hand on the four eighths in between.",
+      "body": [
+        "Count ONE-two-three FOUR-five-six. The left hand plays the root on ONE and the fifth on FOUR; the right hand plays the chord on two, three, five and six.",
+        "Watch the E chord: the right hand needs G#, not G."
+      ],
+      "steps": [
+        "Left hand alone, slowly.",
+        "Right hand alone.",
+        "Mute keys and play both with the band at 100."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 100,
+        "select": {
+          "keys": "waltz",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    },
+    {
+      "id": "keys-broken",
+      "instrument": "keys",
+      "title": "Broken chords in the right hand",
+      "goal": "Play each chord one note at a time: root, third, fifth, octave, fifth, third.",
+      "body": [
+        "This is the keyboard version of the guitar arpeggio. Keep your hand in one position per chord and let the notes ring with the sustain pedal if you have one."
+      ],
+      "steps": [
+        "Play along with Broken chords.",
+        "Try it with your left hand adding the root on beat one."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 96,
+        "select": {
+          "keys": "broken",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    }
+  ]
+}

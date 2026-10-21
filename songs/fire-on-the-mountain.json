@@ -1,0 +1,881 @@
+{
+  "format": 1,
+  "id": "fire-on-the-mountain",
+  "title": "Fire on the Mountain",
+  "artist": "Grateful Dead",
+  "key": "B",
+  "scale": "mixolydian",
+  "meter": "4/4",
+  "tempo": 100,
+  "originalTempo": 116,
+  "summary": "Two chords, B and A, round and round. Perfect for drilling barre changes, then breaking out of them with triads and B mixolydian fills.",
+  "skills": [
+    "Barre chord changes",
+    "Triads on the top strings",
+    "Sixteenth-note strumming",
+    "Mixolydian scale",
+    "Targeting chord tones"
+  ],
+  "notes": "Chord progression and practice parts only. The fills here are original exercises in the style, not transcriptions.",
+  "parts": [
+    {
+      "id": "drums",
+      "instrument": "drums"
+    },
+    {
+      "id": "bass",
+      "instrument": "bass"
+    },
+    {
+      "id": "rhythm",
+      "name": "Rhythm guitar",
+      "instrument": "guitar"
+    },
+    {
+      "id": "lead",
+      "name": "Lead guitar",
+      "instrument": "guitar",
+      "start": "off"
+    },
+    {
+      "id": "keys",
+      "instrument": "keys",
+      "volume": 0.6
+    }
+  ],
+  "voicings": {
+    "B": "x24442",
+    "A": "577655"
+  },
+  "sections": [
+    {
+      "id": "vamp",
+      "name": "Vamp",
+      "chords": "B | A | B | A",
+      "parts": {
+        "drums": [
+          {
+            "id": "groove",
+            "name": "Groove",
+            "pattern": {
+              "hat": "x.x.x.x.x.x.x.x.",
+              "kick": "x.....x...x.....",
+              "snare": "....X..o....X..o"
+            }
+          },
+          {
+            "id": "half-time",
+            "name": "Half-time",
+            "pattern": {
+              "hat": "x.x.x.x.x.x.x.x.",
+              "kick": "x.........x.....",
+              "snare": "........X......."
+            }
+          },
+          {
+            "id": "four-floor",
+            "name": "Four on the floor",
+            "pattern": {
+              "kick": "x...x...x...x...",
+              "open": "..x...x...x...x.",
+              "snare": "....X.......X..."
+            }
+          },
+          {
+            "id": "fill",
+            "name": "Groove with a fill",
+            "pattern": {
+              "hat": "x.x.x.x.x.x.x.x. | x.x.x.x.x.x.....",
+              "kick": "x.....x...x..... | x.....x...x.....",
+              "snare": "....X..o....X..o | ....X..o....XoXX",
+              "tom": "................ | ..............xx"
+            }
+          }
+        ],
+        "bass": [
+          {
+            "id": "roots",
+            "name": "Roots",
+            "steps": "R . . R . . R ."
+          },
+          {
+            "id": "bounce",
+            "name": "Root–fifth bounce",
+            "steps": "R . 5 . 8 . 5 ."
+          },
+          {
+            "id": "walk",
+            "name": "Walk into the change",
+            "steps": "R . 5 . 8 . 7 A | R . 5 . 8 . 3 A"
+          }
+        ],
+        "rhythm": [
+          {
+            "id": "barre",
+            "name": "Barre chords",
+            "type": "strum",
+            "pattern": "D.DU.UDU"
+          },
+          {
+            "id": "triads-2",
+            "name": "Triads, 2nd fret",
+            "type": "strum",
+            "pattern": "D.DU.UDU",
+            "voicings": {
+              "B": "xxx442",
+              "A": "xxx220"
+            }
+          },
+          {
+            "id": "triads-7",
+            "name": "Triads, 7th fret",
+            "type": "strum",
+            "pattern": "D.DU.UDU",
+            "voicings": {
+              "B": "xxx877",
+              "A": "xxx655"
+            }
+          },
+          {
+            "id": "triads-12",
+            "name": "Triads, 12th fret",
+            "type": "strum",
+            "pattern": "D.DU.UDU",
+            "voicings": {
+              "B": "x.x.x.11.12.11",
+              "A": "x.x.x.9.10.9"
+            }
+          },
+          {
+            "id": "funk-16",
+            "name": "Sixteenth funk",
+            "type": "strum",
+            "grid": "16",
+            "pattern": "D.dUxudUD.dUxudU",
+            "voicings": {
+              "B": "xxx877",
+              "A": "xxx655"
+            }
+          }
+        ],
+        "lead": [
+          {
+            "id": "fills",
+            "name": "Mixolydian fills",
+            "type": "notes",
+            "length": 32,
+            "notes": [
+              {
+                "t": 0,
+                "s": 2,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 2,
+                "s": 1,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 4,
+                "s": 2,
+                "f": 9,
+                "d": 2
+              },
+              {
+                "t": 6,
+                "s": 2,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 8,
+                "s": 3,
+                "f": 8,
+                "d": 6
+              },
+              {
+                "t": 16,
+                "s": 2,
+                "f": 10,
+                "d": 2
+              },
+              {
+                "t": 18,
+                "s": 2,
+                "f": 9,
+                "d": 2
+              },
+              {
+                "t": 20,
+                "s": 2,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 22,
+                "s": 3,
+                "f": 9,
+                "d": 2
+              },
+              {
+                "t": 24,
+                "s": 3,
+                "f": 6,
+                "d": 6
+              },
+              {
+                "t": 30,
+                "s": 4,
+                "f": 7,
+                "d": 2
+              }
+            ]
+          },
+          {
+            "id": "sixths",
+            "name": "Double-stop sixths",
+            "type": "notes",
+            "length": 32,
+            "notes": [
+              {
+                "t": 0,
+                "s": 3,
+                "f": 8,
+                "d": 4
+              },
+              {
+                "t": 0,
+                "s": 1,
+                "f": 7,
+                "d": 4
+              },
+              {
+                "t": 4,
+                "s": 3,
+                "f": 6,
+                "d": 2
+              },
+              {
+                "t": 4,
+                "s": 1,
+                "f": 5,
+                "d": 2
+              },
+              {
+                "t": 6,
+                "s": 3,
+                "f": 8,
+                "d": 8
+              },
+              {
+                "t": 6,
+                "s": 1,
+                "f": 7,
+                "d": 8
+              },
+              {
+                "t": 16,
+                "s": 3,
+                "f": 6,
+                "d": 6
+              },
+              {
+                "t": 16,
+                "s": 1,
+                "f": 5,
+                "d": 6
+              },
+              {
+                "t": 22,
+                "s": 3,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 22,
+                "s": 1,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 24,
+                "s": 3,
+                "f": 6,
+                "d": 8
+              },
+              {
+                "t": 24,
+                "s": 1,
+                "f": 5,
+                "d": 8
+              }
+            ]
+          },
+          {
+            "id": "shape-melody",
+            "name": "Melody from the chord shape",
+            "type": "notes",
+            "length": 32,
+            "notes": [
+              {
+                "t": 0,
+                "s": 3,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 2,
+                "s": 2,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 4,
+                "s": 1,
+                "f": 2,
+                "d": 2
+              },
+              {
+                "t": 6,
+                "s": 2,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 8,
+                "s": 2,
+                "f": 2,
+                "d": 2
+              },
+              {
+                "t": 10,
+                "s": 2,
+                "f": 4,
+                "d": 2
+              },
+              {
+                "t": 12,
+                "s": 3,
+                "f": 4,
+                "d": 4
+              },
+              {
+                "t": 16,
+                "s": 4,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 18,
+                "s": 3,
+                "f": 6,
+                "d": 2
+              },
+              {
+                "t": 20,
+                "s": 2,
+                "f": 5,
+                "d": 2
+              },
+              {
+                "t": 22,
+                "s": 3,
+                "f": 6,
+                "d": 2
+              },
+              {
+                "t": 24,
+                "s": 3,
+                "f": 7,
+                "d": 2
+              },
+              {
+                "t": 26,
+                "s": 3,
+                "f": 6,
+                "d": 2
+              },
+              {
+                "t": 28,
+                "s": 4,
+                "f": 7,
+                "d": 4
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "jam",
+      "name": "Jam",
+      "chords": "B | A | B | A",
+      "parts": {
+        "drums": [
+          {
+            "id": "ride",
+            "name": "Ride and toms",
+            "pattern": {
+              "ride": "x.x.x.x.x.x.x.x.",
+              "kick": "x..x..x...x..x..",
+              "snare": "....X.......X.o.",
+              "tom": "..............x."
+            }
+          },
+          "vamp"
+        ],
+        "bass": "vamp",
+        "rhythm": [
+          {
+            "id": "funk-16",
+            "name": "Sixteenth funk",
+            "type": "strum",
+            "grid": "16",
+            "pattern": "D.dUxudUD.dUxudU",
+            "voicings": {
+              "B": "xxx877",
+              "A": "xxx655"
+            }
+          },
+          {
+            "id": "barre",
+            "name": "Barre chords",
+            "type": "strum",
+            "pattern": "D.DU.UDU"
+          }
+        ],
+        "lead": "vamp"
+      }
+    }
+  ],
+  "defaults": {
+    "keys": [
+      {
+        "id": "stabs",
+        "name": "Offbeat stabs",
+        "type": "comp",
+        "pattern": ".x.x.x.x",
+        "leftHand": false
+      },
+      {
+        "id": "two-hand",
+        "name": "Two hands: roots and offbeats",
+        "type": "hands",
+        "left": "R . R .",
+        "leftGrid": "4",
+        "right": ".x.x.x.x"
+      },
+      {
+        "id": "melody",
+        "name": "Melody over roots",
+        "type": "hands",
+        "left": "R . . .",
+        "leftGrid": "4",
+        "length": 32,
+        "melody": [
+          {
+            "t": 0,
+            "n": "F#4",
+            "d": 4
+          },
+          {
+            "t": 4,
+            "n": "G#4",
+            "d": 2
+          },
+          {
+            "t": 6,
+            "n": "A4",
+            "d": 2
+          },
+          {
+            "t": 8,
+            "n": "B4",
+            "d": 6
+          },
+          {
+            "t": 14,
+            "n": "A4",
+            "d": 2
+          },
+          {
+            "t": 16,
+            "n": "G#4",
+            "d": 4
+          },
+          {
+            "t": 20,
+            "n": "F#4",
+            "d": 2
+          },
+          {
+            "t": 22,
+            "n": "E4",
+            "d": 2
+          },
+          {
+            "t": 24,
+            "n": "C#4",
+            "d": 8
+          }
+        ]
+      },
+      {
+        "id": "pad",
+        "name": "Pad",
+        "type": "comp",
+        "grid": "4",
+        "pattern": "x---"
+      }
+    ]
+  },
+  "arrangement": [
+    {
+      "section": "vamp",
+      "repeat": 2
+    },
+    {
+      "section": "jam",
+      "repeat": 2
+    }
+  ],
+  "lessons": [
+    {
+      "id": "barre-change",
+      "title": "Lock in the barre change",
+      "goal": "Switch B to A on beat one without the strumming hand stopping.",
+      "body": [
+        "B is an A-shape barre at the 2nd fret, root on the A string. A is an E-shape barre at the 5th fret, root on the low E string. Your hand slides up three frets and the shape flips.",
+        "Keep the strumming hand moving down and up the whole time, even through the change. The pattern is down, down-up, up-down-up."
+      ],
+      "steps": [
+        "Play along with the rhythm guitar part at 80 bpm until the change feels boring.",
+        "Mute the rhythm guitar and keep going on your own.",
+        "Push the tempo toward 100, then the record's 116."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 80,
+        "select": {
+          "rhythm": "barre",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "triads",
+      "title": "Same two chords, three places on the neck",
+      "goal": "Play B and A as three-string triads at the 2nd, 7th and 12th frets.",
+      "body": [
+        "A triad is just the root, third and fifth. On the top three strings each shape is one note per string, so it's small, quick and easy to move.",
+        "Every chord has three triad shapes on a string set: root on the bottom, third on the bottom, or fifth on the bottom. Switch the fretboard to Triads to see all of them for whichever chord is playing."
+      ],
+      "steps": [
+        "Pick the \"Triads, 7th fret\" variation and play along.",
+        "Try the 2nd-fret and 12th-fret versions. Notice B and A are always the same shape, two frets apart.",
+        "Mix them: one bar up high, one bar low. That's how rhythm players stay interesting on a two-chord vamp."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 90,
+        "select": {
+          "rhythm": "triads-7",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "triads",
+          "triadSet": "123"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "funk-strum",
+      "title": "Sixteenth-note strumming",
+      "goal": "Keep a constant sixteenth-note arm motion and choose which strokes hit.",
+      "body": [
+        "Your arm swings down-up four times per beat. Some strokes hit the strings, some miss on purpose, and the x strokes are muted chucks where the fretting hand relaxes off the strings.",
+        "Lowercase letters in the pattern are lighter strokes. Capitals are accents."
+      ],
+      "steps": [
+        "Start at 70 bpm with the \"Sixteenth funk\" variation playing.",
+        "Mute rhythm guitar and copy it.",
+        "Change one stroke at a time to invent your own pattern."
+      ],
+      "setup": {
+        "section": "jam",
+        "tempo": 70,
+        "select": {
+          "rhythm": "funk-16",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "mixolydian",
+      "title": "Map B mixolydian",
+      "goal": "Play B mixolydian in all five positions.",
+      "body": [
+        "Mixolydian is the major scale with the seventh lowered one fret. In B that turns A# into A, which is exactly why the A chord fits.",
+        "Position 1 starts on the B at the 7th fret of the low E string. If you already know the major scale shape there, just flatten each seventh."
+      ],
+      "steps": [
+        "Play position 1 up and down along with the groove, one note per beat.",
+        "Step through positions 2 to 5 and find where each one overlaps the last.",
+        "Roots are amber, so use them as landmarks."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 90,
+        "select": {
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "scale",
+          "scale": "mixolydian",
+          "position": 1
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "target-tones",
+      "title": "Aim at the chord tones",
+      "goal": "Make melodies that follow the chords by landing on their thirds.",
+      "body": [
+        "Over B, the third is D#. Over A, it's C#. Landing on those notes as the chord changes makes a melody sound like it belongs.",
+        "The \"Mixolydian fills\" part does exactly that: it ends the B bar on D# and the A bar on C#."
+      ],
+      "steps": [
+        "Listen to the fills a few times with the fretboard on Chord tones.",
+        "Mute the lead part and play the fills yourself.",
+        "Now improvise, but promise to land on the teal third each time the chord changes."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 90,
+        "select": {
+          "lead": "fills"
+        },
+        "fretboard": {
+          "layer": "chord",
+          "labels": "intervals"
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "shape-melody",
+      "instrument": "guitar",
+      "title": "Melodies from inside the chord shape",
+      "goal": "Play a melody without letting go of the barre shapes.",
+      "body": [
+        "Flatpickers who seem to improvise endlessly, the way David Rawlings does, are mostly not running scales up and down. They hold a chord shape and pick the melody out of the notes under their fingers, adding a neighbour note or a hammer-on for movement.",
+        "Over B, hold the A-shape barre at the 2nd fret: the melody uses B, D# and F# from the shape plus C# with your second finger. Over A, hold the E-shape at the 5th fret and borrow D on the G string's 7th fret before falling back to C#."
+      ],
+      "steps": [
+        "Fret the B chord and play the melody without lifting the barre.",
+        "Same for A at the 5th fret. Notice your hand never really moves.",
+        "Make up your own: one note from the shape per beat, then add one neighbour note per bar.",
+        "Play it with your eyes closed. Knowing where you are from the shape is what lets players look away from the neck."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 84,
+        "select": {
+          "lead": "shape-melody",
+          "rhythm": "barre"
+        },
+        "fretboard": {
+          "layer": "shape",
+          "part": "lead",
+          "labels": "intervals"
+        }
+      }
+    },
+    {
+      "id": "own-fill",
+      "title": "Write your own fill",
+      "goal": "Capture a two-bar fill and save it as a new variation.",
+      "body": [
+        "Open Capture, pick the Vamp section, and record a phrase with a MIDI keyboard or by tapping the fretboard.",
+        "Save it to the song and it shows up as a new lead variation you can loop and print."
+      ],
+      "steps": [
+        "Record two bars over B then A.",
+        "Keep the one you like and download the song file to commit it."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 90,
+        "select": {
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "scale",
+          "scale": "mixolydian",
+          "position": 1
+        }
+      },
+      "instrument": "guitar"
+    },
+    {
+      "id": "keys-hands",
+      "instrument": "keys",
+      "title": "Two hands, two jobs",
+      "goal": "Left hand plays roots on beats 1 and 3 while the right hand stabs the offbeats.",
+      "body": [
+        "Splitting the work is the first step of two-handed playing. The left hand is the bass player: B or A, low and steady. The right hand is the rhythm guitar: a three-note chord on every 'and'.",
+        "Right hand B is B–D#–F#, A is A–C#–E. Every finger moves down one step at the change."
+      ],
+      "steps": [
+        "Watch the keyboard on Part and play only the left hand along with the track.",
+        "Now only the right hand.",
+        "Mute the keys and put them together at 70 bpm."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 70,
+        "select": {
+          "keys": "two-hand",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    },
+    {
+      "id": "keys-voicing",
+      "instrument": "keys",
+      "title": "Smaller moves between chords",
+      "goal": "Find an A chord shape that's closer to your B.",
+      "body": [
+        "Instead of sliding the whole B triad down, try A in first inversion: C#–E–A. From B–D#–F#, your thumb moves B to C#, and the other fingers barely move.",
+        "Turn on Chord tones to see every B or A note across the keyboard, and pick the nearest ones."
+      ],
+      "steps": [
+        "With Chord tones on, find three different ways to play A within reach of your B.",
+        "Pick the one that moves least and use it with the Two hands part."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 80,
+        "select": {
+          "keys": "two-hand",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "chord"
+        }
+      }
+    },
+    {
+      "id": "keys-melody",
+      "instrument": "keys",
+      "title": "Melody over a left-hand pulse",
+      "goal": "Keep the left hand on roots while the right hand plays a mixolydian line.",
+      "body": [
+        "The right hand line climbs F#–G#–A–B over the B chord and steps down to C# for the A chord, landing on the third. The left hand just plays the root on beat one."
+      ],
+      "steps": [
+        "Play the melody alone from the Sheet page.",
+        "Add the left hand: one note per bar.",
+        "Mute keys and play both along with the band."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 80,
+        "select": {
+          "keys": "melody",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    },
+    {
+      "id": "drums-anatomy",
+      "instrument": "drums",
+      "title": "Anatomy of the groove",
+      "goal": "Hear what each drum is doing on its own.",
+      "body": [
+        "Kick on 1 and the 'and' of 2 pushes the song forward; snare on 2 and 4 is the backbeat; the hi-hat keeps eighths. The two quiet 'o' notes are ghost snares, which give it swing without getting louder."
+      ],
+      "steps": [
+        "Solo the drums and follow each lane on the pads.",
+        "Switch between Groove, Half-time and Four on the floor and notice how the same tempo feels faster or slower."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 100,
+        "solo": "drums",
+        "select": {
+          "drums": "groove"
+        }
+      }
+    },
+    {
+      "id": "drums-fill",
+      "instrument": "drums",
+      "title": "A two-bar phrase with a fill",
+      "goal": "Make bar two different from bar one so the loop breathes.",
+      "body": [
+        "A fill is a small change at the end of a phrase that tells the band something is coming. Here the hats drop out, the snare doubles up and two toms lead back to the one.",
+        "Open Capture, pick Drums, set the length to 2 bars and make your own version. Change one lane at a time."
+      ],
+      "steps": [
+        "Listen to Groove with a fill.",
+        "In Capture, start from Groove, set 2 bars, and change only the last two beats of bar two.",
+        "Save it and loop it with the band."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 100,
+        "select": {
+          "drums": "fill"
+        }
+      }
+    },
+    {
+      "id": "synth-organ",
+      "instrument": "synth",
+      "title": "A warm organ comp on the FM-1",
+      "goal": "Build a sound for the offbeat stabs.",
+      "body": [
+        "The keys part here works best with a soft organ-like tone. In FM terms: a sine carrier with a modulator at the same frequency (1:1 ratio), a low modulation amount, a fast attack and full sustain. Raise the modulation for more bite in the Jam.",
+        "Mute the keys part and play the stabs on your synth so you hear your sound in the band."
+      ],
+      "steps": [
+        "Start from a plain sine and add modulation slowly until it sounds like an organ.",
+        "Shorten the release so the stabs stay tight.",
+        "Mute keys and play the offbeat stabs on your synth."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 90,
+        "mute": [
+          "keys"
+        ],
+        "select": {
+          "keys": "stabs",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "shape"
+        }
+      }
+    }
+  ]
+}
