@@ -42,6 +42,10 @@ GitHub Pages: Settings → Pages → deploy from the `main` branch, root folder.
 2. Add `"my-song.json"` to `songs/index.json`.
 3. `npm test` to check it compiles, then commit.
 
+## User flows
+
+[docs/flows.md](docs/flows.md) is how the site is meant to be used, as stories, each with a flow that drives it in a real browser on a tablet, desktop and phone profile and checks what the band played as well as what's on screen. `npm run flows` runs them (setup is in that doc); a change that passes `npm test` and breaks a flow isn't done.
+
 Edits made in the app live in your browser until you download the song file. The song picker marks them "(edited)" or "(draft)".
 
 ## Code map

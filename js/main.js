@@ -104,8 +104,10 @@ function revertSong() {
   if (entry.repoRaw) songs.set(id, { raw: entry.repoRaw, source: 'repo' });
   else songs.delete(id);
   refreshLibrary();
-  const next = songs.has(id) ? id : [...songs.keys()][0];
-  navigate(next, store.state.view);
+  // Back to the repo's file: open it again here, as navigating to the same
+  // address wouldn't reload it.
+  if (songs.has(id)) openSong(id);
+  else navigate([...songs.keys()][0], store.state.view);
 }
 
 function downloadSong() {
@@ -322,6 +324,16 @@ function renderTransport() {
   );
 }
 
+// The tempo changes in place: rebuilding the transport would swap the
+// slider out from under a drag.
+function syncTempo(tempo) {
+  const bar = document.getElementById('transport');
+  const input = bar.querySelector('input[aria-label="Tempo"]');
+  if (input && Number(input.value) !== tempo) input.value = tempo;
+  const bpm = bar.querySelector('.t-bpm strong');
+  if (bpm) bpm.textContent = String(tempo);
+}
+
 function toggle(label, on, onChange) {
   return h('button.toggle', { type: 'button', 'aria-pressed': String(on), class: on ? 'on' : '', onclick: () => onChange(!on) }, label);
 }
@@ -347,17 +359,29 @@ store.on((st, patch) => {
   if ('volumes' in patch) for (const [k, v] of Object.entries(patch.volumes)) engine.setBusVolume(k, v);
   const shellKeys = JSON.stringify([st.songId, st.view, st.library.length, st.library.map((l) => l.source).join()]);
   if (shellKeys !== lastShellKeys) { lastShellKeys = shellKeys; renderHeader(); }
-  if (['tempo', 'playing', 'loopMode', 'countIn', 'click', 'sectionId', 'songId'].some((k) => k in patch)) renderTransport();
+  if (['playing', 'loopMode', 'countIn', 'click', 'sectionId', 'songId'].some((k) => k in patch)) renderTransport();
+  else if ('tempo' in patch) syncTempo(st.tempo);
   if (['songId', 'view', 'error'].some((k) => k in patch)) renderShell();
   mounted?.update?.(st, patch);
   if ('fb' in patch && patch.fb.labels) savePrefs({ ...loadPrefs(), labels: patch.fb.labels });
 });
 
-// keyboard: space toggles play when not typing
+// keyboard: space toggles play when not typing. A control keeps Space for
+// itself only when it was reached from the keyboard (Tab); one that was
+// clicked would take every Space as another click (Export MIDI again).
+// Chrome counts any focus as keyboard focus once a key is down, so the
+// control a pointer last focused is remembered instead.
+const CONTROLS = 'button, input, summary, [role=button]';
+let clicked = null;
+document.addEventListener('pointerdown', (e) => {
+  clicked = e.target.closest?.('label')?.control ?? e.target.closest?.(CONTROLS) ?? null;
+}, true);
 document.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') clicked = null;
   if (e.code !== 'Space' || e.repeat) return;
-  const tag = document.activeElement?.tagName;
-  if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(tag)) return;
+  const el = document.activeElement;
+  if (el?.matches('input:not([type=range], [type=checkbox], [type=radio]), textarea, select, [contenteditable]')) return;
+  if (el?.matches(CONTROLS) && el !== clicked) return;
   e.preventDefault();
   togglePlay();
 });

@@ -29,13 +29,13 @@ export function mountSheet(root, app) {
     );
   }
 
+  const byline = () => [song.song.artist, `${pcName(song.keyRoot, flats)} ${SCALES[song.scale].name.toLowerCase()}`, song.time.meter, `${store.state.tempo} bpm`].filter(Boolean).join(' / ');
+
   async function renderSheet() {
     const my = ++token;
     clear(body);
     const raw = song.song;
-    body.append(h('header.sheet-head',
-      h('h1', song.title),
-      h('p.byline', [raw.artist, `${pcName(song.keyRoot, flats)} ${SCALES[song.scale].name.toLowerCase()}`, song.time.meter, `${store.state.tempo} bpm`].filter(Boolean).join(' / '))));
+    body.append(h('header.sheet-head', h('h1', song.title), h('p.byline', byline())));
     for (const sid of song.order) {
       if (opts.only !== 'all' && opts.only !== sid) continue;
       const sec = song.sections[sid];
@@ -79,6 +79,7 @@ export function mountSheet(root, app) {
   return {
     update(st, patch) {
       if ('selection' in patch) renderSheet();
+      else if ('tempo' in patch) body.querySelector('.sheet-head .byline').textContent = byline();
     },
     destroy() { token++; },
   };
