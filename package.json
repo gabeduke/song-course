@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
+    "flows": "node scripts/flows.mjs",
     "serve": "python3 -m http.server 8000"
   }
 }

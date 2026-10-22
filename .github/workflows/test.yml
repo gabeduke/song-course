@@ -9,3 +9,35 @@ jobs:
         with:
           node-version: 22
       - run: npm test
+
+  # The user flows (docs/flows.md): Gabe's stories, driven in a real browser
+  # on a tablet and a desktop profile, with the band's output checked. The
+  # unit tests only see that the songs compile; this sees the site work.
+  # A todo flow (a story not built yet) reports and never fails the job.
+  flows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Pinned to the versions docs/flows.md installs.
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.49.0 axe-core@4.11.4
+          npx playwright install --with-deps chromium
+      - name: User flows
+        run: node scripts/flows.mjs --shots=flow-shots --json=flows.json --storyboard=storyboard
+      # The storyboard (storyboard/index.html: every screen, pass or fail),
+      # and the failures' screenshots.
+      - name: Keep the storyboard
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flow-storyboard
+          path: |
+            storyboard/
+            flow-shots/
+            flows.json
+          if-no-files-found: ignore

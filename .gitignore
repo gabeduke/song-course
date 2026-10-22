@@ -1,0 +1,7 @@
+# The user flows (scripts/flows.mjs) need playwright and axe-core installed
+# at the repo root (npm install --no-save, see docs/flows.md); nothing else
+# uses node_modules.
+/node_modules/
+/package-lock.json
+# Claude's cached flow reviews
+/.cache/
