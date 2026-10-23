@@ -63,6 +63,7 @@ export function mountCapture(root, app) {
   function renderSetup() {
     const inputs = midiIn.inputs();
     const drums = part()?.instrument === 'drums';
+    app.controller?.setContext({ drums });
     neck.hidden = drums;
     put(clear(setup), 
       h('div.cap-row',
@@ -174,6 +175,7 @@ export function mountCapture(root, app) {
 
   const onStep = (e) => {
     const { step, time } = e.detail;
+    cap.lastStep = { step, time };
     if (cap.armed && step === 0) {
       cap.armed = false;
       cap.recording = true;
@@ -555,6 +557,18 @@ export function mountCapture(root, app) {
   player.addEventListener('step', onStep);
   const offMidi = midiIn.on(onMidi);
   const offChange = midiIn.onChange(renderSetup);
+  // REC on the keyboard records a pass; its pads, in Drums, play into the
+  // grid at the step you hit them, while the groove loops.
+  const offRec = app.controller?.on('rec', () => { if (part()?.instrument !== 'drums') toggleRecord(); });
+  const offDrum = app.controller?.on('drum', ({ lane, vel, time }) => {
+    if (part()?.instrument !== 'drums' || !cap.drum || !player.playing || !cap.previewing || !cap.lastStep) return;
+    const cells = cap.drum.lanes[lane];
+    const n = Math.round((midiToCtxTime(time) - cap.lastStep.time) / player.stepDur());
+    const i = (((cap.lastStep.step + n) % cells.length) + cells.length) % cells.length;
+    cells[i] = vel > 0.85 ? 'X' : vel < 0.3 ? 'o' : 'x';
+    renderDrumEditor();
+    preview();
+  });
 
   renderSetup();
   renderTake();
@@ -569,6 +583,9 @@ export function mountCapture(root, app) {
       player.removeEventListener('step', onStep);
       offMidi();
       offChange();
+      offRec?.();
+      offDrum?.();
+      app.controller?.setContext({ drums: false });
       if (cap.recording || cap.armed) player.stop();
     },
   };

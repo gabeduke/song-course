@@ -12,6 +12,11 @@ export class Player extends EventTarget {
     this.raf = null;
     this.queue = [];
     this.lookahead = 0.12;
+    // Set by the controller (js/controller.js): tap(e) hears what's
+    // scheduled, ahead of time, to send it to a keyboard as MIDI;
+    // external(partId) is true for a part the keyboard plays instead.
+    this.tap = null;
+    this.external = null;
   }
 
   get playing() {
@@ -87,6 +92,7 @@ export class Player extends EventTarget {
     this.pos = { arrIndex, step: 0 };
     this.countSteps = s.countIn ? this.song.time.stepsPerBar : 0;
     this.countStep = 0;
+    this.begun = false;
     this.nextTime = this.engine.now + 0.1;
     this.timer = setInterval(() => this.tick(), 25);
     this.tick();
@@ -99,7 +105,10 @@ export class Player extends EventTarget {
   }
 
   stop() {
-    if (this.timer) clearInterval(this.timer);
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.tap?.({ kind: 'stop' });
+    }
     if (this.raf) cancelAnimationFrame(this.raf);
     this.timer = null;
     this.raf = null;
@@ -170,6 +179,11 @@ export class Player extends EventTarget {
     const step = this.pos.step;
     const eng = this.engine;
     const t = time + this.swingOffset(step, dur);
+    if (!this.begun) {
+      this.begun = true;
+      this.tap?.({ kind: 'start', time });
+    }
+    this.tap?.({ kind: 'step', time, dur, step });
 
     if (s.click && this.song.time.pulses.includes(step % this.song.time.stepsPerBar)) {
       eng.click(time, step % this.song.time.stepsPerBar === 0);
@@ -181,10 +195,12 @@ export class Player extends EventTarget {
       const evs = v.byStep.get(step);
       if (!evs) continue;
       const audible = this.partAudible(part.id);
+      const external = audible && !!this.external?.(part.id);
       const out = eng.bus(part.id, part.volume);
       for (const ev of evs) {
         const evDur = ev.d * dur;
-        if (audible) {
+        if (external) this.tap?.({ kind: 'note', part, ev, time: t, dur: evDur });
+        else if (audible) {
           switch (ev.kind) {
             case 'drum': eng.drum(ev.drum, t, ev.vel, out); break;
             case 'dead': eng.deadNote(t, ev.vel, out); break;

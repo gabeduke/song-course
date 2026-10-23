@@ -8,6 +8,7 @@ import {
   scalePositions, triadShapes, parseShape, defaultVoicing, fretMidi, TUNING, placeOnNeck,
 } from '../theory.js';
 import { variationDetail, markStep, clearSteps } from '../parts-ui.js';
+import { mountLab, hasLab } from '../labs.js';
 
 const LAYERS = [
   { value: 'chord', label: 'Chord tones' },
@@ -30,7 +31,8 @@ export function mountPractice(root, app) {
   const arrangement = h('section.arrangement', { 'aria-label': 'Arrangement' });
   const parts = h('section.parts', { 'aria-label': 'Parts' });
   const lessons = h('section.lessons', { 'aria-label': 'Lessons' });
-  root.append(hero, neck, arrangement, h('div.practice-cols', parts, lessons));
+  const labSlot = h('section.lab-slot', { 'aria-label': 'Lab', hidden: true });
+  root.append(hero, neck, labSlot, arrangement, h('div.practice-cols', parts, lessons));
 
   // ---------------------------------------------------------------- live state
   const live = { chord: null, step: -1, sectionId: null, arrIndex: -1 };
@@ -385,6 +387,34 @@ export function mountPractice(root, app) {
     }
   }
 
+  // ---------------------------------------------------------------- lab
+  // A lesson with a lab ("lab": "fm") opens it full width under the neck,
+  // for as long as the lesson is open.
+  // Opening one brings the lab into view, with the lesson's words above it,
+  // rather than leaving the lesson to jump down the page out of sight.
+  let lab = null;
+  function renderLab({ reveal = false } = {}) {
+    const l = song.lessons.find((x) => x.id === store.state.lessonId);
+    const id = l?.lab && hasLab(l.lab) ? `${l.id}:${l.lab}` : null;
+    if (id === lab?.id) return;
+    lab?.handle.destroy();
+    lab = null;
+    clear(labSlot);
+    labSlot.hidden = !id;
+    if (!id) return;
+    const holder = h('div.lab-holder');
+    labSlot.append(
+      h('div.lab-lesson',
+        h('div.lab-lesson-t', h('span.lab-kicker', 'Lesson'), h('h2', l.title), l.goal ? h('p.muted', l.goal) : null),
+        h('details.lab-read',
+          h('summary', 'Read the lesson'),
+          (l.body ?? []).map((p) => h('p', p)),
+          l.steps?.length ? h('ol.lesson-steps', l.steps.map((x) => h('li', x))) : null)),
+      holder);
+    lab = { id, handle: mountLab(l.lab, holder, app, l) };
+    if (reveal) requestAnimationFrame(() => labSlot.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+  }
+
   // ---------------------------------------------------------------- lessons
   function renderLessons() {
     const st = store.state;
@@ -488,6 +518,7 @@ export function mountPractice(root, app) {
   renderArrangement();
   renderParts();
   renderLessons();
+  renderLab();
 
   return {
     update(st, patch) {
@@ -508,7 +539,14 @@ export function mountPractice(root, app) {
         if (!('sectionId' in patch)) renderParts();
         if (st.fb.layer === 'shape') renderNeck();
       }
-      if ('lessonId' in patch || 'lessonFilter' in patch) renderLessons();
+      if ('lessonId' in patch || 'lessonFilter' in patch) { renderLessons(); renderLab({ reveal: 'lessonId' in patch }); }
+      if ('volumes' in patch) {
+        // a fader on the keyboard moved: the slider follows
+        for (const [pid, v] of Object.entries(patch.volumes)) {
+          const input = parts.querySelector(`.part[data-part="${pid}"] input.vol`);
+          if (input && Number(input.value) !== v) input.value = v;
+        }
+      }
       if ('loopMode' in patch) renderArrangement();
       if ('playing' in patch && !st.playing) {
         resetLive();
@@ -522,6 +560,7 @@ export function mountPractice(root, app) {
       player.removeEventListener('step', onStep);
       player.removeEventListener('event', onEvent);
       offMidi();
+      lab?.handle.destroy();
     },
   };
 }

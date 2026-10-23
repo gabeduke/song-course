@@ -1,0 +1,117 @@
+/* FM lab: the operators in their role colours (op 1 amber, 2 teal, 3
+   periwinkle, 4 rose), the wiring, and the sound drawn two ways. */
+
+.fml {
+  background: linear-gradient(180deg, var(--surface), var(--bg));
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fml-head { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: flex-end; justify-content: space-between; }
+.fml-title { flex: 1 1 320px; }
+.fml-title p { margin: 4px 0 0; font-size: 0.9rem; max-width: 60ch; }
+.fml-pick { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.fml-pick .seg button { min-height: 32px; }
+
+.fml-algos { display: flex; flex-wrap: wrap; gap: 6px; }
+.fml-algo {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px;
+  padding: 4px 12px 4px 6px;
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.fml-algo.on { background: var(--raised); color: var(--text); border-color: var(--accent); }
+.fml-algo-icon { width: 44px; height: 34px; flex: none; }
+.fml-ai-edge { stroke: var(--muted); stroke-width: 1.4; }
+.fml-ai-out { stroke: var(--text); stroke-width: 2.5; stroke-linecap: round; opacity: 0.7; }
+.fml-ai-op { fill: var(--c); }
+
+/* the diagram beside the two scopes */
+.fml-main { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr); gap: 16px; align-items: start; }
+.fml figure { margin: 0; }
+.fml figcaption { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+.fml-diagram { background: var(--bg); border: 1px solid var(--line-soft); border-radius: var(--radius); padding: 10px; }
+.fml-diagram-svg { display: block; width: 100%; max-height: 360px; height: auto; }
+.fml-dop-box { fill: color-mix(in srgb, var(--c) 16%, var(--surface)); stroke: var(--c); stroke-width: 2; }
+.fml-dop.modulator .fml-dop-box { stroke-dasharray: 5 3; }
+.fml-glow { fill: var(--c); opacity: 0; filter: blur(5px); transition: opacity 0.05s linear; }
+.fml-dop-n { fill: var(--c); font: 700 26px var(--font-display); }
+.fml-dop-ratio { fill: var(--text); font: 700 14px var(--font-body); }
+.fml-dop-level { fill: var(--muted); font: 700 12px var(--font-body); }
+.fml-wire { fill: none; stroke-width: 2.2; }
+.carrier-wire { stroke: var(--text); opacity: 0.55; }
+.mod-wire, .fb-wire { stroke: var(--c); }
+.fb-wire { stroke-dasharray: 4 3; }
+.fml-fb-label { fill: var(--muted); font: 700 11px var(--font-body); }
+.fml-arrowhead { fill: var(--muted); }
+.fml-out { fill: var(--text); opacity: 0.75; }
+.fml-out-label { fill: var(--muted); font: 700 12px var(--font-body); }
+
+.fml-scopes { display: grid; gap: 12px; }
+.fml-wave-box, .fml-spec-box { position: relative; background: var(--bg); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden; }
+.fml-wave-box { height: 110px; }
+.fml-spec-box { height: 170px; margin-bottom: 18px; overflow: visible; }
+.fml-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: inherit; }
+.fml-marks { position: absolute; inset: 0 0 0 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.fml-side { stroke: var(--third); stroke-width: 3; stroke-linecap: round; opacity: 0.95; }
+.fml-side.centre { stroke: var(--root); }
+.fml-axis { position: absolute; left: 0; right: 0; top: 100%; height: 18px; font-size: 0.72rem; color: var(--muted); }
+.fml-axis span { position: absolute; top: 2px; transform: translateX(-50%); white-space: nowrap; }
+.fml-axis span:first-child { transform: none; }
+.fml-axis span:last-child { transform: translateX(-100%); }
+.fml-key-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--third); margin-right: 6px; vertical-align: -1px; }
+
+.fml-explain { margin: 0; padding: 10px 14px; background: var(--raised); border-left: 3px solid var(--accent); border-radius: var(--radius-sm); font-size: 0.95rem; max-width: 92ch; }
+
+/* operator cards */
+.fml-ops { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.fml-op { background: var(--bg); border: 1px solid var(--line-soft); border-top: 3px solid var(--c); border-radius: var(--radius); padding: 10px 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+.fml-op.unused { opacity: 0.6; border-top-style: dashed; }
+.fml-op-idle { margin: 0; font-size: 0.82rem; color: var(--muted); }
+.fml-op-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.fml-op-n { font: 700 1.3rem var(--font-display); color: var(--c); }
+.fml-op-head h3 { font-size: 0.95rem; }
+.fml-op-role { color: var(--muted); font-size: 0.78rem; width: 100%; }
+.fml-env { width: 100%; height: 38px; background: var(--surface); border-radius: var(--radius-sm); margin-bottom: 4px; }
+.fml-env-line { fill: color-mix(in srgb, var(--c) 22%, transparent); stroke: var(--c); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.fml-slider { display: grid; grid-template-columns: 58px minmax(0, 1fr) 54px; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); font-weight: 700; }
+.fml-slider input { width: 100%; height: 30px; margin: 0; }
+.fml-val { color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* playing */
+.fml-play { display: flex; flex-direction: column; gap: 8px; }
+.fml-play-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.fml-play-head p { margin: 0; font-size: 0.85rem; flex: 1 1 260px; }
+.fml-play-head .toggle { min-height: 32px; }
+.fml-keys .piano-svg { max-height: 150px; }
+
+@media (max-width: 1200px) {
+  .fml-ops { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 960px) {
+  .fml-main { grid-template-columns: 1fr; }
+  .fml-diagram-svg { max-height: 280px; }
+}
+
+@media (max-width: 640px) {
+  .fml { padding: 12px; }
+  .fml-ops { grid-template-columns: 1fr; }
+  .fml-algo { padding-right: 9px; font-size: 0.8rem; }
+  .fml-spec-box { height: 140px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fml-glow { transition: none; }
+}

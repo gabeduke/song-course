@@ -164,6 +164,14 @@ Optional; defaults to each section once in order.
 }
 ```
 
+A lesson can also open a lab, an interactive panel under the neck for as long as the lesson is open:
+
+```json
+{ "id": "bell", "instrument": "synth", "title": "…", "lab": "fm", "patch": "bell", "setup": { … } }
+```
+
+`lab` is `fm`, the FM lab: four operators, their wiring, a waveform and a spectrum with the predicted sidebands, and keys to play it (a MIDI keyboard plays it too). `patch` is the sound it starts from: `sine`, `organ`, `bell`, `epiano`, `bass` or `brass` (`organ` if left out). The patches and the wiring are in [`js/fm.js`](../js/fm.js).
+
 `instrument` groups lessons into tracks (Guitar, Keys, Drums, Synth, or anything else). "Set up this exercise" applies `setup`: it loops the section, sets the tempo, picks variations everywhere they exist, mutes or solos parts, and points the fretboard (or keyboard, for keys and synth lessons) at the right layer. Fretboard layers: `chord`, `triads`, `scale`, `shape` (the selected part). Triad string sets: `all`, `123`, `234`, `345`, `456`.
 
 ## A note on copyright

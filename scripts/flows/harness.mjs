@@ -77,7 +77,7 @@ const STATE_FN = `async () => {
 const LISTEN_FN = `async () => {
   const app = ${APP};
   const eng = app.engine;
-  window.__heard = { calls: [], clicks: [], auditions: [], steps: [] };
+  window.__heard = { calls: [], clicks: [], auditions: [], steps: [], live: [] };
   if (!eng.__flowSpied) {
     eng.__flowSpied = true;
     const busOf = (out) => { for (const [id, b] of eng.buses) if (b.gain === out) return id; return '?'; };
@@ -90,26 +90,39 @@ const LISTEN_FN = `async () => {
     eng.click = (time, accent) => { window.__heard?.clicks.push({ t: time, accent }); return click(time, accent); };
     const audition = eng.audition.bind(eng);
     eng.audition = (notes, inst) => { window.__heard?.auditions.push({ notes: notes.map((n) => n.midi), inst: inst ?? 'guitar' }); return audition(notes, inst); };
+    const liveOn = eng.liveOn.bind(eng);
+    eng.liveOn = (midi, vel, voice) => { window.__heard?.live.push({ midi, voice: voice ?? 'keys' }); return liveOn(midi, vel, voice); };
     app.player.addEventListener('step', (e) => window.__heard?.steps.push({ sid: e.detail.sectionId, step: e.detail.step, arr: e.detail.arrIndex, time: e.detail.time }));
   }
 }`;
 
 const HEARD_FN = `() => {
-  const h = window.__heard ?? { calls: [], clicks: [], auditions: [], steps: [] };
+  const h = window.__heard ?? { calls: [], clicks: [], auditions: [], steps: [], live: [] };
   const parts = {};
   for (const c of h.calls) parts[c.bus] = (parts[c.bus] ?? 0) + 1;
-  return { parts, calls: h.calls.length, clicks: h.clicks, auditions: h.auditions, steps: h.steps };
+  return { parts, calls: h.calls.length, clicks: h.clicks, auditions: h.auditions, steps: h.steps, live: h.live ?? [] };
 }`;
 
-// A Web MIDI input the flow plays: navigator.requestMIDIAccess answers one
-// keyboard, "Flow Keys", and window.__midi.send([status, d1, d2]) plays it.
-function fakeMidi() {
+// A Web MIDI keyboard the flow plays: navigator.requestMIDIAccess answers
+// one input and its output, named "Flow Keys" (or the flow's midi.name, as
+// "SMK-37+VA" to be that keyboard). window.__midi.send([status, d1, d2])
+// plays it; window.__midi.sent is what the app sent it, with timestamps.
+function fakeMidi(name) {
   const input = {
-    id: 'flow-keys', name: 'Flow Keys', manufacturer: 'flows', state: 'connected', type: 'input', onmidimessage: null,
+    id: 'flow-keys', name, manufacturer: 'flows', state: 'connected', type: 'input', onmidimessage: null,
   };
-  const access = { inputs: new Map([[input.id, input]]), outputs: new Map(), onstatechange: null, sysexEnabled: false };
-  Object.defineProperty(navigator, 'requestMIDIAccess', { configurable: true, value: async () => access });
+  const sent = [];
+  const output = {
+    id: 'flow-keys-out', name, manufacturer: 'flows', state: 'connected', type: 'output',
+    send(data, timestamp) { sent.push({ data: [...data], at: timestamp ?? performance.now() }); },
+  };
+  const access = { inputs: new Map([[input.id, input]]), outputs: new Map([[output.id, output]]), onstatechange: null, sysexEnabled: false };
+  Object.defineProperty(navigator, 'requestMIDIAccess', {
+    configurable: true,
+    value: async (opts) => { access.sysexEnabled = !!opts?.sysex; return access; },
+  });
   window.__midi = {
+    sent,
     send(data) {
       input.onmidimessage?.({ data: new Uint8Array(data), timeStamp: performance.now() });
     },
@@ -199,7 +212,7 @@ export async function runFlow(browser, flow, profileName, { base, shots, storybo
     d[t.nextAnswer ? 'accept' : 'dismiss']().catch(() => {});
     t.nextAnswer = false;
   });
-  if (flow.midi) await context.addInitScript(fakeMidi);
+  if (flow.midi) await context.addInitScript(fakeMidi, flow.midi.name ?? 'Flow Keys');
   await context.addInitScript(controlKeyFn);
   // Which controls a person's input reached, for the coverage map: the
   // page reports its own pointer and key events, however they came.
@@ -350,7 +363,10 @@ export async function runFlow(browser, flow, profileName, { base, shots, storybo
       const bytes = readFileSync(await d.path());
       return { name: d.suggestedFilename(), bytes, text: bytes.toString('utf8') };
     },
-    midi: { send: (data) => page.evaluate((d) => window.__midi.send(d), data) },
+    midi: {
+      send: (data) => page.evaluate((d) => window.__midi.send(d), data),
+      sent: () => page.evaluate(() => window.__midi.sent.map((m) => ({ data: m.data, at: m.at }))),
+    },
     toast: () => page.evaluate(() => {
       const el = document.querySelector('.toast.show');
       return el ? el.textContent : '';

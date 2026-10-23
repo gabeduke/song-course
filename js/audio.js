@@ -42,6 +42,26 @@ export class Engine {
       this.reverbSend.connect(this.reverb).connect(this.master);
     }
     if (this.ctx.state !== 'running') await this.ctx.resume();
+    if (this.sinkId !== undefined && this.ctx.sinkId !== this.sinkId) await this.applyOutput();
+  }
+
+  /** Chrome on a computer can send the sound to a chosen output (a keyboard's USB audio). */
+  get canPickOutput() {
+    return typeof AudioContext !== 'undefined' && 'setSinkId' in AudioContext.prototype;
+  }
+
+  async setOutput(deviceId) {
+    this.sinkId = deviceId || '';
+    if (this.ctx) await this.applyOutput();
+  }
+
+  async applyOutput() {
+    try {
+      await this.ctx.setSinkId?.(this.sinkId);
+    } catch (e) {
+      console.warn('Could not switch the audio output', e);
+      this.sinkId = '';
+    }
   }
 
   makeNoise(seconds) {
@@ -385,6 +405,158 @@ export class Engine {
     o.connect(this.envGain(time, accent ? 0.22 : 0.13, 0.001, 0.03, this.master));
     o.start(time);
     o.stop(time + 0.06);
+  }
+
+  // ------------------------------------------------------------- live
+  // Notes held on a MIDI keyboard: they sound until the key comes up (or
+  // the sustain pedal does), and follow the pitch bend and mod wheel.
+
+  liveBus() {
+    if (!this.live) {
+      const ctx = this.ctx;
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 5.5;
+      const vib = ctx.createGain();
+      vib.gain.value = 0;
+      lfo.connect(vib);
+      lfo.start();
+      this.live = { voices: new Map(), held: new Set(), sustain: false, bend: 0, vib, fm: null };
+    }
+    return this.live;
+  }
+
+  /** voice: 'keys' | 'synth' | 'guitar' | 'bass' */
+  liveOn(midi, vel, voice = 'keys') {
+    if (!this.ctx) return;
+    const live = this.liveBus();
+    this.liveOff(midi, { force: true });
+    const out = this.bus('_live', 0.85);
+    const t = this.ctx.currentTime + 0.005;
+    let v;
+    if (voice === 'synth' && live.fm) {
+      live.fm.noteOn(midi, vel, t);
+      v = { fm: true };
+    } else if (voice === 'guitar') v = this.liveGuitar(midi, vel, t, out);
+    else if (voice === 'bass') v = this.liveBass(midi, vel, t, out);
+    else v = this.liveKeys(midi, vel, t, out);
+    for (const o of v.oscs ?? []) {
+      o.detune.value = live.bend * 100;
+      live.vib.connect(o.detune);
+    }
+    live.voices.set(midi, v);
+    live.held.add(midi);
+  }
+
+  liveOff(midi, { force = false } = {}) {
+    const live = this.live;
+    if (!live) return;
+    live.held.delete(midi);
+    if (live.sustain && !force) return;
+    const v = live.voices.get(midi);
+    if (!v) return;
+    live.voices.delete(midi);
+    const t = this.ctx.currentTime;
+    if (v.fm) { live.fm?.noteOff(midi, t); return; }
+    v.gain.gain.cancelScheduledValues(t);
+    v.gain.gain.setValueAtTime(Math.max(v.gain.gain.value, 0.0001), t);
+    v.gain.gain.exponentialRampToValueAtTime(0.0001, t + v.release);
+    for (const o of v.srcs) {
+      try { o.stop(t + v.release + 0.05); } catch { /* already stopped */ }
+    }
+  }
+
+  liveSustain(down) {
+    const live = this.liveBus();
+    live.sustain = down;
+    if (!down) for (const m of [...live.voices.keys()]) if (!live.held.has(m)) this.liveOff(m);
+  }
+
+  liveBend(semis) {
+    const live = this.liveBus();
+    live.bend = semis;
+    const t = this.ctx.currentTime;
+    for (const v of live.voices.values()) for (const o of v.oscs ?? []) o.detune.setTargetAtTime(semis * 100, t, 0.01);
+    live.fm?.bend(semis);
+  }
+
+  liveMod(amount) {
+    const live = this.liveBus();
+    live.vib.gain.setTargetAtTime(amount * 45, this.ctx.currentTime, 0.03);
+    live.fm?.mod(amount);
+  }
+
+  liveAllOff() {
+    if (!this.live) return;
+    this.live.sustain = false;
+    for (const m of [...this.live.voices.keys()]) this.liveOff(m, { force: true });
+    this.live.fm?.allOff();
+  }
+
+  /** The FM voice for 'synth', set up once (js/fm.js loads on demand). */
+  async liveSynth(patchName = 'epiano') {
+    const live = this.liveBus();
+    if (!live.fm) {
+      const { FmSynth, PRESETS } = await import('./fm.js');
+      live.fm = new FmSynth(this.ctx, this.bus('_live', 0.85));
+      live.fmPresets = PRESETS;
+    }
+    if (live.fmPresets?.[patchName]) live.fm.setPatch(live.fmPresets[patchName]);
+    return live.fm;
+  }
+
+  liveKeys(midi, vel, t, out) {
+    const ctx = this.ctx;
+    const f = mtof(midi);
+    const car = ctx.createOscillator();
+    car.frequency.value = f;
+    const mod = ctx.createOscillator();
+    mod.frequency.value = f;
+    const modGain = ctx.createGain();
+    modGain.gain.setValueAtTime(f * 1.6 * vel, t);
+    modGain.gain.exponentialRampToValueAtTime(f * 0.15, t + 0.6);
+    mod.connect(modGain).connect(car.frequency);
+    const g = ctx.createGain();
+    const lvl = 0.13 * vel;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(lvl, t + 0.005);
+    g.gain.exponentialRampToValueAtTime(lvl * 0.4, t + 1.2);
+    g.gain.exponentialRampToValueAtTime(lvl * 0.12, t + 6);
+    car.connect(g).connect(out);
+    car.start(t);
+    mod.start(t);
+    return { gain: g, srcs: [car, mod], oscs: [car, mod], release: 0.25 };
+  }
+
+  liveBass(midi, vel, t, out) {
+    const ctx = this.ctx;
+    const o = ctx.createOscillator();
+    o.type = 'sawtooth';
+    o.frequency.value = mtof(midi);
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.Q.value = 2;
+    lp.frequency.setValueAtTime(200 + 1400 * vel, t);
+    lp.frequency.exponentialRampToValueAtTime(320, t + 0.2);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.4 * vel, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.28 * vel, t + 0.12);
+    o.connect(lp).connect(g).connect(out);
+    o.start(t);
+    return { gain: g, srcs: [o], oscs: [o], release: 0.08 };
+  }
+
+  liveGuitar(midi, vel, t, out) {
+    const { buffer, rate } = this.pluckBuffer(midi);
+    const src = this.ctx.createBufferSource();
+    src.buffer = buffer;
+    src.playbackRate.value = rate;
+    const g = this.ctx.createGain();
+    g.gain.setValueAtTime(0.32 * vel, t);
+    src.connect(g).connect(this.guitarOut(out));
+    src.start(t);
+    src.stop(t + buffer.duration / rate);
+    return { gain: g, srcs: [src], oscs: [src], release: 0.12 };
   }
 
   /** Audition a single note or chord right now (fretboard taps etc.). */
