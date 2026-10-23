@@ -55,6 +55,7 @@ not here.
 | J2.2 | follow the Keys, Drums and Synth tracks: the keyboard for keys, the drums soloed, the keys muted for the synth | `j2.2-lesson-tracks` | core |
 | J2.3 | trust that every lesson in every starter song sets up what it says, from its own button | `j2.3-every-lesson` | core (desktop) |
 | J2.4 | see the exercise I just set up: the neck it changed is on screen after Set up, not scrolled away above the lessons | `j2.4-setup-in-view` | todo (tablet) |
+| J2.5 | open the Synth track's "How FM operators work" and get the FM lab under the neck: play a held note, raise operator 2's index and see sidebands appear on the harmonics, move its ratio to 3.5 and see them leave the grid (a bell), switch the wiring and see the diagram redraw; closing the lesson puts the lab away | `j2.5-fm-lab` | core (tablet, desktop, phone) |
 | J3.1 | read the chart, notation and tab of the variations I chose, or every variation, one section, with drums; it fits a phone | `j3.1-sheet` | core |
 | J3.2 | print the sheet without the app's bars and controls on the paper | `j3.2-print` | core |
 | J3.3 | have the sheet show what I chose in Practice, at the tempo I'm practising at, and keep up when I change it | `j3.3-sheet-follows` | core |
@@ -68,6 +69,13 @@ not here.
 | J6.1 | export the loop or the whole song as a MIDI file for the MPC, at my tempo | `j6.1-export-midi` | core |
 | J6.2 | open a link to a song and view; the tabs change the address and Back goes back; a link to a song that isn't here opens a starter song | `j6.2-links` | core |
 | J6.3 | press Space to play and stop, whatever I last clicked, except while typing in a box (a button I Tab to takes Space itself) | `j6.3-space` | core (desktop) |
+| J7.1 | plug in the SMK-37 and see what its controls do here: the sheet names it and its firmware, draws its panel with what reaches Woodshed lit and labelled, and says how to set the keyboard up; the top bar shows it connected | `j7.1-keyboard-connect` | core (tablet, desktop, phone) |
+| J7.2 | turn K5 for the tempo, K6 for the section, K7 for what the neck shows, a fader for a part's level (its slider follows), and be told what each did | `j7.2-knobs-faders` | core |
+| J7.3 | start and stop the band from SEQ PLAY on the keyboard; a stray Start while it plays doesn't restart it | `j7.3-seq-play` | core |
+| J7.4 | hear my keys: from the keyboard's own sound, or through Woodshed as an e-piano on the keyboard view; in the FM lab they play the lab's patch, once, and the knobs move its operators | `j7.4-keys-sound` | core |
+| J7.5 | teach Woodshed my pads with Learn, then mute parts with the bottom row and loop sections with the top; it remembers them | `j7.5-learn-pads` | core |
+| J7.6 | have the keyboard's own engine play a band part, in time, while Woodshed's voice for it goes quiet; send it the clock so its arpeggiator follows | `j7.6-part-to-keyboard` | core |
+| J7.7 | finger-drum on the pads: in Capture on the drums they play the kit, and while the groove loops each hit lands in the grid where I struck it | `j7.7-pad-drums` | core |
 | U1 | see the whole neck and Play on a song's first screen on the tablet, without scrolling | `u1-first-screen` | todo (tablet) |
 
 J2.4 and U1 are proposals from the first review, not stories Gabe has
@@ -78,10 +86,12 @@ agreed: drop them or make them core.
 | Id | Story | Status |
 |---|---|---|
 | R1 | a real keyboard on the tablet over USB-C OTG: Connect finds it, a recorded pass lands on the grid, no stuck notes | rig |
+| R4 | the real SMK-37 (+VA) on the tablet: knobs and faders on their MIDI CC banks drive Woodshed, the pads' notes learned, a band part plays on its engine in time with the tablet's band, and a patch sent from the FM lab sounds like the lab ([hardware notes](hardware/smk-37-elite.md)) | rig |
+| R5 | the SMK-37 over Bluetooth MIDI on Android, and its sound through its USB audio | rig |
 | R2 | the band sounds right: the mix, the swing, the plucked guitar's attack, the count-in's level | rig |
 | R3 | the site on GitHub Pages, under its `/song-course/` path, loads its songs | rig |
 | I1 | pull MIDI captured on the jam-space Pi (Hindsight) in as a take | idea (README) |
-| I2 | send MIDI clock out so the Bento follows the tempo | idea (README) |
+| I2 | send MIDI clock out so the Bento follows the tempo (the keyboard gets it now: Keyboard › Send clock; the Bento would need its own output) | idea (README) |
 | I3 | record guitar through an audio interface with pitch detection | idea (README) |
 
 ## What a run says
@@ -178,7 +188,9 @@ export default {
   `t.download(fn)` answers the file a click handed over; `t.answer(yes)`
   replies to the next `confirm()`; `t.toast()` reads the toast;
   `t.midi.send([0x90, 60, 100])` plays the fake keyboard a `midi: true`
-  flow gets.
+  flow gets (`midi: { name: 'SMK-37+VA' }` makes it that keyboard), and
+  `t.midi.sent()` is what the app sent it, with timestamps. `t.heard().live`
+  is the notes Woodshed played for the keys.
 - Wait on the band, not the clock, where it matters: listen for the
   player's `step` events in the page (J4.3 plays its keyboard on cue that
   way). `FLOWS_CPU=4 node scripts/flows.mjs` runs the pages four times

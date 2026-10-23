@@ -853,14 +853,16 @@
       "instrument": "synth",
       "title": "A warm organ comp on the FM-1",
       "goal": "Build a sound for the offbeat stabs.",
+      "lab": "fm",
+      "patch": "organ",
       "body": [
         "The keys part here works best with a soft organ-like tone. In FM terms: a sine carrier with a modulator at the same frequency (1:1 ratio), a low modulation amount, a fast attack and full sustain. Raise the modulation for more bite in the Jam.",
         "Mute the keys part and play the stabs on your synth so you hear your sound in the band."
       ],
       "steps": [
-        "Start from a plain sine and add modulation slowly until it sounds like an organ.",
+        "Load Organ in the FM lab (or start from a plain sine on your synth) and add modulation slowly until it sounds like an organ.",
         "Shorten the release so the stabs stay tight.",
-        "Mute keys and play the offbeat stabs on your synth."
+        "Mute keys and play the offbeat stabs on your synth or the lab’s keys."
       ],
       "setup": {
         "section": "vamp",

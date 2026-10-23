@@ -11,6 +11,8 @@ import { mountPractice } from './views/practice.js';
 import { mountSheet } from './views/sheet.js';
 import { mountCapture } from './views/capture.js';
 import { midiIn } from './midi-in.js';
+import { createController } from './controller.js';
+import { mountKeyboardSheet, controlName } from './views/keyboard.js';
 
 const prefs = loadPrefs();
 
@@ -54,6 +56,7 @@ const app = {
   exportMidi,
   togglePlay,
 };
+app.controller = createController(app);
 
 // ------------------------------------------------------------------ library
 
@@ -279,12 +282,39 @@ function renderHeader() {
   const tabs = h('nav.tabs', { 'aria-label': 'View' },
     [['practice', 'Practice'], ['sheet', 'Sheet'], ['capture', 'Capture']].map(([v, label]) =>
       h('a', { href: `#/${encodeURIComponent(st.songId ?? '')}/${v}`, class: v === st.view ? 'on' : '', 'aria-current': v === st.view ? 'page' : undefined }, label)));
+  const kb = app.controller;
   header.append(
     h('a.wordmark', { href: '#', title: 'Woodshed' }, h('span.wm-mark', { 'aria-hidden': 'true' }), 'Woodshed'),
     select,
     tabs,
+    h('button.kb-open', {
+      type: 'button', class: kb.connected ? 'on' : '', onclick: openKeyboard,
+      'aria-label': kb.connected ? `Keyboard: ${kb.deviceName} connected` : 'Keyboard',
+      title: kb.connected ? `${kb.deviceName}: what its controls do here` : 'Connect a MIDI keyboard',
+    }, h('span.kb-dot', { 'aria-hidden': 'true' }), h('span.kb-open-t', kb.connected ? kb.profile.name : 'Keyboard')),
   );
 }
+
+// ------------------------------------------------------------------ keyboard
+
+let sheet = null;
+function openKeyboard() {
+  sheet ??= mountKeyboardSheet(app);
+  sheet.open();
+}
+
+// What a hardware control just did, for a moment at the top of the screen.
+const hud = h('div.hud', { role: 'status', 'aria-live': 'polite' });
+document.body.append(hud);
+app.controller.on('hud', ({ control, label, text }) => {
+  put(clear(hud), control ? h('b', controlName(control)) : null, h('span', label), text ? h('em', text) : null);
+  hud.classList.add('show');
+  clearTimeout(hud._t);
+  hud._t = setTimeout(() => hud.classList.remove('show'), 1400);
+});
+midiIn.onChange(() => renderHeader());
+// A browser only lets a page make sound after a tap: take the first one.
+document.addEventListener('pointerdown', () => { if (midiIn.enabled && !engine.ready) engine.init().catch(() => {}); }, true);
 
 function renderTransport() {
   const st = store.state;
@@ -391,6 +421,8 @@ window.addEventListener('hashchange', route);
 (async function boot() {
   await loadLibrary();
   route();
+  // a keyboard allowed before connects again by itself
+  midiIn.resume();
 })();
 
 export { app, pcName, prefersFlats, SCALES };

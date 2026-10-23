@@ -38,8 +38,11 @@ function geometry({ touch }) {
     const text = (el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 24);
     return text ? `${s} "${text}"` : s;
   };
+  // A modal sheet (showModal) makes the page behind it inert: nothing there can be tapped.
+  const modal = document.querySelector('dialog:modal');
   const shown = (el) => {
     if (el.closest('[inert], [hidden], [aria-hidden="true"]')) return false;
+    if (modal && !modal.contains(el)) return false;
     // A closed <details> keeps its content's boxes but shows none of it.
     if (el.closest('details:not([open])') && !el.closest('details:not([open]) > summary')) return false;
     const st = getComputedStyle(el);

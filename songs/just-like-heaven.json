@@ -601,16 +601,56 @@
       }
     },
     {
+      "id": "synth-fm-operators",
+      "instrument": "synth",
+      "title": "How FM operators work",
+      "goal": "Hear what an operator’s ratio, level and envelope each do, and why the wiring matters.",
+      "lab": "fm",
+      "patch": "sine",
+      "body": [
+        "An operator is a sine wave with its own level and its own envelope, nothing more. A carrier is an operator you hear. A modulator is wired into another operator’s pitch and wobbles it so fast that you don’t hear a wobble: you hear a new tone colour.",
+        "The ratio picks which overtones appear. They land at the carrier plus and minus steps of the modulator: at 1:2 that’s 1, 3, 5…; at 1:3.5 it’s 1, 2.5, 4.5, 6… Whole-number ratios put them on the note’s own harmonics, so it sounds pitched, like an organ or brass. In-between ratios put them between the harmonics, so it rings like a bell. The level, called the index on a modulator, picks how many of them are loud: more index, brighter.",
+        "Each operator’s envelope is what makes the tone move. A modulator that dies away before its carrier lets the brightness fade before the note does: a bell. A short burst on a high-ratio modulator is an electric piano’s tine. A modulator that swells in slower than its carrier is a brass attack.",
+        "The algorithm is the wiring. Carriers side by side are layers you mix, two sounds in one. A stack, a modulator modulating a modulator, makes far more overtones from the same knobs. Feedback, an operator modulating itself, pushes a sine towards a sawtooth’s buzz. So a patch looks hand-tuned because it is: each operator is one ingredient (the body, the attack, the shimmer) and the algorithm decides which you hear and which only colour the others.",
+        "Build sounds in this order and FM stops being guesswork: one carrier alone, one modulator at 1:1, raise its index, change the ratio, then shape the modulator’s envelope. Add operators only once you know what the first two are doing."
+      ],
+      "steps": [
+        "Play a key in the FM lab with Sine chosen: one line on the spectrum, at the note, and a plain wave.",
+        "Raise operator 2’s index slowly (turn on Hold notes to keep a note ringing): lines appear either side, evenly spaced, and the wave gets a kink.",
+        "Set operator 2’s ratio to 2, then 3, then add a fine of .50: at 3.5 the lines leave the harmonic grid and it turns into a bell.",
+        "Give operator 2 a short decay and no sustain: the note gets darker as it rings, while operator 1 keeps going.",
+        "Start from E-piano and try Stack and Two pairs with the same operators: same ingredients, different wiring, a different instrument.",
+        "With the SMK-37 connected (Keyboard in the top bar), play the lab from its keys and turn K5–K8 on their MIDI CC bank for the four operators’ levels. Send to keyboard loads your sound into the SMK’s own FM engine; press PATCH there to keep it.",
+        "Play the verse’s chords on the keyboard with a sound you made, while the band plays with the keys muted."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 90,
+        "mute": [
+          "keys"
+        ],
+        "select": {
+          "keys": "pad",
+          "lead": "off"
+        },
+        "fretboard": {
+          "layer": "chord"
+        }
+      }
+    },
+    {
       "id": "synth-bell",
       "instrument": "synth",
       "title": "Design a bell for the arpeggio",
       "goal": "Make an FM bell sound and play the arpeggio part on your synth.",
+      "lab": "fm",
+      "patch": "bell",
       "body": [
         "Bells come from non-whole-number ratios. Try a modulator at 3.5 times the carrier, a fast attack, and a decay of about a second with no sustain. More modulation makes it glassier.",
         "Mute keys, then play the bell arpeggio on your synth: root, third, fifth, octave and back down."
       ],
       "steps": [
-        "Set up a two-operator patch with a 1:3.5 ratio.",
+        "Load Bell in the FM lab, or set up a two-operator patch with a 1:3.5 ratio on your synth.",
         "Shape the decay so each note rings into the next without smearing.",
         "Mute keys and play along."
       ],
