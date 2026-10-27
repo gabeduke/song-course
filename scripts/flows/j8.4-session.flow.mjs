@@ -23,12 +23,12 @@ export default {
     await t.step('go back to the book', () => t.tap(page.locator('a.back')));
     await t.until((x) => x.view === 'book' && !x.drillId);
     const items = await page.locator('.session-list .si').allTextContents();
-    t.expect('the session has it at the end, in D', items.length === 8 && /Triad inversions/.test(items[7]) && /D · Strings 1–3/.test(items[7]), items.at(-1));
+    t.expect('the session has it at the end, in D', items.length === 9 && /Triad inversions/.test(items[8]) && /D · Strings 1–3/.test(items[8]), items.at(-1));
 
     await t.step('tap Start session', () => t.tap(page.locator('.book-session .btn', { hasText: 'Start session' })));
     let s = await t.until((x) => x.drillId === 'chromatic');
     t.expect('the first drill opens, the chromatic spider', s.drillId === 'chromatic' && s.session.active && s.session.index === 0, s.session);
-    t.expect('the session bar says 1 of 8 with three minutes on the clock', await page.locator('.session-bar .ss-kicker').textContent() === 'Session 1/8' && /^(3:00|2:5\d) left$/.test(await page.evaluate(clock)), await page.evaluate(clock));
+    t.expect('the session bar says 1 of 9 with three minutes on the clock', await page.locator('.session-bar .ss-kicker').textContent() === 'Session 1/9' && /^(3:00|2:5\d) left$/.test(await page.evaluate(clock)), await page.evaluate(clock));
     await t.wait(2200);
     t.expect('the clock runs', /^2:5\d left$/.test(await page.evaluate(clock)), await page.evaluate(clock));
 
@@ -38,23 +38,23 @@ export default {
     t.expect('the clock stops', await page.evaluate(clock) === a, { before: a, after: await page.evaluate(clock) });
 
     await t.step('tap Next', () => t.tap(next(page)));
-    s = await t.until((x) => x.drillId === 'legato');
-    t.expect('hammer-ons open, with the session’s 1–4 fingers', s.drill.pair === '14' && s.session.index === 1, s.drill);
+    s = await t.until((x) => x.drillId === 'find-notes');
+    t.expect('Find every note opens, on C', s.drill.key === 'C' && s.session.index === 1, s.drill);
 
     await t.step('tap Next until the song', async () => {
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 6; i++) {
         const at = (await t.state()).session.index;
         await t.tap(next(page));
         await t.until((x) => x.session.index === at + 1);
       }
     });
     s = await t.until((x) => x.view === 'practice');
-    t.expect('Fire on the Mountain opens on Practice', s.songId === 'fire-on-the-mountain' && s.view === 'practice' && s.session.index === 6, s);
+    t.expect('Fire on the Mountain opens on Practice', s.songId === 'fire-on-the-mountain' && s.view === 'practice' && s.session.index === 7, s);
     t.expect('the session bar is still there', await page.locator('.session-bar').isVisible());
 
     await t.step('tap Next', () => t.tap(next(page)));
     s = await t.until((x) => x.drillId === 'triad-inversions');
-    t.expect('my triad inversions open, in D', s.drill.key === 'D' && s.session.index === 7, s.drill);
+    t.expect('my triad inversions open, in D', s.drill.key === 'D' && s.session.index === 8, s.drill);
 
     await t.step('tap Finish', () => t.tap(next(page)));
     s = await t.until((x) => !x.session.active);

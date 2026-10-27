@@ -13,7 +13,8 @@ import { mountCapture } from './views/capture.js';
 import { midiIn } from './midi-in.js';
 import { createController } from './controller.js';
 import { mountKeyboardSheet, controlName } from './views/keyboard.js';
-import { mountBook, mountDrill } from './views/book.js';
+import { mountBook, mountDrill, mountLesson } from './views/book.js';
+import { lessonById } from './lessons.js';
 import { drillById, buildDrill, advance, paramsLabel } from './drills.js';
 import { createSession, mmss } from './session.js';
 
@@ -37,6 +38,7 @@ const store = createStore({
   lessonFilter: 'guitar',
   // the practice book: the open drill, its settings, and how it moves on
   drillId: null,
+  bookLesson: null, // a book lesson's id, while its page is open
   drill: null,
   move: { how: null, every: 4 },
   drillLoop: 0,
@@ -344,6 +346,8 @@ player.addEventListener('state', (e) => store.set({ playing: e.detail.playing })
 // ------------------------------------------------------------------ routing
 
 function parseHash() {
+  const learn = /^#\/book\/learn\/([^/]+)\/?$/.exec(location.hash);
+  if (learn) return { view: 'book', drillId: null, lesson: decodeURIComponent(learn[1]) };
   const book = /^#\/book(?:\/([^/]+))?\/?$/.exec(location.hash);
   if (book) return { view: 'book', drillId: book[1] ? decodeURIComponent(book[1]) : null };
   const [, id, view] = /^#\/([^/]+)(?:\/(\w+))?/.exec(location.hash) ?? [];
@@ -379,11 +383,11 @@ function routeNow({ force = false } = {}) {
       loadDrill(drillId);
       songRev++; // a fresh page for it, even when it's the drill already open
     } else if (!drillId) {
-      // the book's contents: nothing to play here
+      // the book's contents or a lesson: nothing to play here
       player.stop();
-      document.title = 'Practice book · Woodshed';
+      document.title = `${lessonById(hash.lesson)?.title ?? 'Practice book'} · Woodshed`;
     }
-    store.set({ view: 'book', drillId });
+    store.set({ view: 'book', drillId, bookLesson: drillId ? null : lessonById(hash.lesson)?.id ?? null });
     return;
   }
   // leaving the book for a song opens it afresh
@@ -410,7 +414,7 @@ let mountedKey = '';
 
 function renderShell() {
   const st = store.state;
-  const key = `${st.songId}|${st.view}|${st.view === 'book' ? st.drillId : ''}|${st.error ?? ''}|${songRev}`;
+  const key = `${st.songId}|${st.view}|${st.view === 'book' ? `${st.drillId}:${st.bookLesson}` : ''}|${st.error ?? ''}|${songRev}`;
   renderHeader();
   renderTransport();
   if (key === mountedKey && mounted) return;
@@ -424,7 +428,7 @@ function renderShell() {
     return;
   }
   if (st.view === 'book') {
-    mounted = st.drillId ? mountDrill(main, app) : mountBook(main, app);
+    mounted = st.drillId ? mountDrill(main, app) : st.bookLesson ? mountLesson(main, app) : mountBook(main, app);
     return;
   }
   if (!compiled) return;

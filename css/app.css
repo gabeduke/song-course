@@ -790,14 +790,21 @@ details.kb-card summary { cursor: pointer; font: 600 1.05rem var(--font-display)
 .si-move .mini { min-width: 28px; min-height: 28px; }
 .mini:disabled { opacity: 0.35; cursor: default; }
 
-.book-video h2 { font-size: 1.1rem; margin: 4px 0 2px; }
-.chapters { list-style: none; margin: 8px 0 0; padding: 0; }
-.chapters li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 4px 10px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line-soft); }
-.ch-t { font-weight: 700; font-variant-numeric: tabular-nums; min-height: 24px; display: inline-flex; align-items: center; }
-.ch-body { display: flex; flex-direction: column; min-width: 0; }
-.ch-body .muted { font-size: 0.85rem; }
-.ch-drill { font-size: 0.85rem; font-weight: 700; text-align: right; max-width: 15ch; min-height: 24px; }
-.drill-video ul.chapters li { grid-template-columns: 48px minmax(0, 1fr); }
+.book-lessons h2 { margin: 0 0 2px; }
+.lessons-index { list-style: none; margin: 8px 0 0; padding: 0; counter-reset: book-lesson; }
+.lessons-index li { counter-increment: book-lesson; border-top: 1px solid var(--line-soft); }
+.lessons-index a { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 2px 10px; padding: 8px 0; color: var(--text); text-decoration: none; min-height: 44px; }
+.lessons-index a::before { content: counter(book-lesson); grid-row: span 2; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.lessons-index a:hover strong { color: var(--accent); }
+.lessons-index strong { font-family: var(--font-display); font-weight: 600; }
+.lessons-index .muted { font-size: 0.85rem; }
+
+.lesson-text { max-width: 68ch; margin-bottom: 28px; }
+.lesson-text section { margin-bottom: 20px; }
+.lesson-text h2 { font-size: 1.25rem; margin: 0 0 6px; }
+.lesson-text li { margin-bottom: 4px; }
+.lesson-next { font-weight: 700; }
+.lesson-next a { display: inline-flex; min-height: 44px; align-items: center; }
 
 .book-cat { margin-bottom: 30px; }
 .drill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
@@ -826,8 +833,12 @@ a.drill-card:hover, .dc-main:hover strong { border-color: var(--accent); color: 
 }
 .loop-count { font-size: 0.85rem; font-variant-numeric: tabular-nums; }
 .drill-how p { max-width: 64ch; }
-.drill-video { margin-top: 18px; }
-.drill-video h3 { margin-bottom: 4px; }
+.drill-lessons { margin-top: 18px; }
+.drill-lessons h3 { margin-bottom: 4px; }
+.drill-lessons ul { margin: 0; padding-left: 18px; }
+.drill-lessons li { padding: 3px 0; }
+.drill-lessons a { font-weight: 700; }
+.tab-hidden { padding: 18px; border: 1px dashed var(--line); border-radius: var(--radius-lg); }
 .drill-sheet { margin: 0; background: var(--paper); color: var(--ink); border-radius: var(--radius-lg); padding: 14px; overflow-x: auto; }
 .drill-sheet .notation svg { max-width: 100%; height: auto; }
 .drill-sheet .tok { background: #e7dfd0; color: var(--ink); }
@@ -861,8 +872,6 @@ a.drill-card:hover, .dc-main:hover strong { border-color: var(--accent); color: 
 @media (max-width: 640px) {
   .si { grid-template-columns: 26px minmax(0, 1fr); }
   .si-min, .si-move { grid-column: 2; }
-  .chapters li { grid-template-columns: 44px minmax(0, 1fr); }
-  .ch-drill { grid-column: 2; text-align: left; max-width: none; }
   .ss-clock { margin-left: 0; }
   .drill-run { margin-top: 0; }
 }

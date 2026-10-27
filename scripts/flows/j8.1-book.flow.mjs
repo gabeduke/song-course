@@ -1,5 +1,5 @@
 // J8.1 The practice book: from any song, Book opens the contents (the
-// session, the video's chapters, every drill by category, the songs); a
+// session, the lessons, every drill by category, the songs); a
 // drill opens on its own page with the neck, how to practise it and its
 // tab; the tabs take me back to the song. docs/flows.md#j81
 export default {
@@ -15,15 +15,15 @@ export default {
     t.expect('the practice book opens, and the address says so', s.view === 'book' && !s.drillId && page.url().endsWith('#/book'), { s: s.view, url: page.url() });
     const contents = await page.evaluate(() => ({
       session: document.querySelectorAll('.session-list .si').length,
-      chapters: document.querySelectorAll('.book-video .chapters li').length,
+      lessons: document.querySelectorAll('.book-lessons .lessons-index li').length,
       cats: [...document.querySelectorAll('.book-cat h2')].map((x) => x.textContent),
       drills: document.querySelectorAll('a.drill-card[data-drill]').length,
       idle: document.querySelector('#transport .t-idle')?.textContent ?? '',
     }));
-    t.expect('my session is there, the starter list of seven', contents.session === 7, contents);
-    t.expect('the video’s seven chapters are listed', contents.chapters === 7, contents);
-    t.expect('warm-ups, triads, pentatonic, scales and the songs', JSON.stringify(contents.cats) === JSON.stringify(['Warm-ups', 'Triads', 'Pentatonic', 'Scales', 'Songs']), contents.cats);
-    t.expect('eleven drills to pick from', contents.drills === 11, contents);
+    t.expect('my session is there, the starter list of eight', contents.session === 8, contents);
+    t.expect('the nine lessons are listed', contents.lessons === 9, contents);
+    t.expect('warm-ups, technique, triads, pentatonic, scales, the neck, ear training and the songs', JSON.stringify(contents.cats) === JSON.stringify(['Warm-ups', 'Technique', 'Triads', 'Pentatonic', 'Scales', 'The neck', 'Ear training', 'Songs']), contents.cats);
+    t.expect('nineteen drills to pick from', contents.drills === 19, contents);
     t.expect('the transport says to pick one', /Pick a drill/.test(contents.idle), contents.idle);
 
     await t.step('tap The five pentatonic boxes', () => t.tap(page.locator('a.drill-card[data-drill="pentatonic-boxes"]')));

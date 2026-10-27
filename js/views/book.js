@@ -1,6 +1,7 @@
-// The practice book: its contents (your session, the video's chapters, the
-// drills by category, the songs) and a drill's own page (the neck, the key
-// and where on the neck, how it moves on, how to practise it, its tab).
+// The practice book: its contents (your session, the lessons, the drills by
+// category, the songs), a lesson's page, and a drill's own page (the neck,
+// the key and where on the neck, how it moves on, how to practise it, its
+// tab).
 
 import { h, clear, put, segmented, toast } from '../dom.js';
 import { Fretboard } from '../fretboard.js';
@@ -8,8 +9,9 @@ import {
   parseChord, mod12, intervalRole, INTERVALS, pcName, prefersFlats, fretMidi, keySignature,
 } from '../theory.js';
 import {
-  DRILLS, CATEGORIES, VIDEO, KEYS, drillById, advanceChoices, paramsLabel, videoAt, clock,
+  DRILLS, CATEGORIES, KEYS, drillById, advanceChoices, paramsLabel,
 } from '../drills.js';
+import { LESSONS, lessonById, lessonsFor } from '../lessons.js';
 import { renderNotation } from '../notation.js';
 import { variationDetail } from '../parts-ui.js';
 
@@ -24,8 +26,8 @@ export function mountBook(root, app) {
   root.append(
     h('header.book-hero',
       h('h1', 'Practice book'),
-      h('p.lede', 'The warm-ups, triads, pentatonic boxes and scales you’d flip through the books for, in any key and anywhere on the neck, with a band to play them over. Line them up into a session and the clock walks you through it.')),
-    h('div.book-top', sessionCard, videoCard()),
+      h('p.lede', 'The warm-ups, technique, triads, scales and ear training you’d flip through the books for, in any key and anywhere on the neck, with a band to play them over. Read a lesson, line the drills up into a session, and the clock walks you through it.')),
+    h('div.book-top', sessionCard, lessonsCard()),
     ...CATEGORIES.map((cat) => h('section.book-cat', { 'aria-labelledby': `cat-${cat.id}` },
       h('div.panel-head', h('h2', { id: `cat-${cat.id}` }, cat.title), h('p.muted', cat.blurb)),
       h('div.drill-grid', DRILLS.filter((d) => d.category === cat.id).map((d) => drillCard(d))))),
@@ -38,7 +40,7 @@ export function mountBook(root, app) {
   );
 
   function drillCard(d) {
-    const meta = [d.keyed ? 'Any key' : null, d.stops ? `${d.stops({}).length} ${d.stopsName ?? `${d.stopName.toLowerCase()}s`}` : null, d.video ? 'From the video' : null].filter(Boolean);
+    const meta = [d.keyed ? `Any ${(d.keyLabel ?? 'key').toLowerCase()}` : null, d.stops ? `${d.stops({}).length} ${d.stopsName ?? `${d.stopName.toLowerCase()}s`}` : null].filter(Boolean);
     return h('a.drill-card', { href: `#/book/${d.id}`, dataset: { drill: d.id } },
       h('strong', d.title), h('span', d.goal), h('span.dc-meta', meta.join(' · ')));
   }
@@ -83,19 +85,41 @@ export function mountBook(root, app) {
   return { update() {}, destroy() { off(); } };
 }
 
-function videoCard() {
-  return h('section.book-card.book-video', { 'aria-labelledby': 'video-h' },
-    h('span.lab-kicker', 'From the video'),
-    h('h2#video-h', VIDEO.title),
-    h('p.muted', VIDEO.channel, ' · ', h('a', { href: VIDEO.url, target: '_blank', rel: 'noopener' }, 'Watch on YouTube')),
-    h('p', 'Soloing over changes with triads. Each chapter, and the drill here that practises it:'),
-    h('ol.chapters', VIDEO.chapters.map((c) => {
-      const d = drillById(c.drill);
-      return h('li',
-        h('a.ch-t', { href: videoAt(c.t), target: '_blank', rel: 'noopener', 'aria-label': `${c.title}, at ${clock(c.t)} in the video` }, clock(c.t)),
-        h('span.ch-body', h('strong', c.title), h('span.muted', c.note)),
-        h('a.ch-drill', { href: `#/book/${d.id}` }, d.title));
-    })));
+function lessonsCard() {
+  return h('section.book-card.book-lessons', { 'aria-labelledby': 'lessons-h' },
+    h('h2#lessons-h', 'Lessons'),
+    h('p.muted', 'The ideas behind the drills, a few minutes’ reading each.'),
+    h('ol.lessons-index', LESSONS.map((l) => h('li',
+      h('a', { href: `#/book/learn/${l.id}`, dataset: { lesson: l.id } }, h('strong', l.title), h('span.muted', l.summary))))));
+}
+
+// ------------------------------------------------------------------ a lesson
+
+export function mountLesson(root, app) {
+  const lesson = lessonById(app.store.state.bookLesson);
+  const i = LESSONS.indexOf(lesson);
+  const next = LESSONS[i + 1];
+  root.append(
+    h('article.lesson-page',
+      h('header.drill-hero',
+        h('div.hero-text',
+          h('a.back', { href: '#/book' }, '← Practice book'),
+          h('span.lab-kicker', `Lesson ${i + 1} of ${LESSONS.length}`),
+          h('h1', lesson.title),
+          h('p.summary', lesson.summary))),
+      h('div.lesson-text', lesson.sections.map((sec) => h('section',
+        h('h2', sec.h),
+        (sec.p ?? []).map((x) => h('p', x)),
+        sec.list ? h('ul', sec.list.map((x) => h('li', x))) : null,
+        sec.after ? h('p', sec.after) : null))),
+      lesson.drills.length ? h('section.book-cat', { 'aria-labelledby': 'practise-h' },
+        h('div.panel-head', h('h2#practise-h', 'Practise it'), h('p.muted', 'Each opens with a band to play over; Add to session from there.')),
+        h('div.drill-grid', lesson.drills.map((id) => {
+          const d = drillById(id);
+          return h('a.drill-card', { href: `#/book/${d.id}`, dataset: { drill: d.id } }, h('strong', d.title), h('span', d.goal));
+        }))) : h('p', h('a', { href: '#/book' }, 'Your session is on the book’s front page.')),
+      next ? h('p.lesson-next', h('a', { href: `#/book/learn/${next.id}` }, `Next: ${next.title} →`)) : null));
+  return { update() {}, destroy() {} };
 }
 
 // ------------------------------------------------------------------ a drill
@@ -110,8 +134,12 @@ export function mountDrill(root, app) {
     app.loadDrill(drill.id, { ...store.state.drill, ...patch });
     store.set({ drillLoop: 0 });
   };
-  const flats = () => prefersFlats(song.keyRoot, song.scale);
+  const flats = () => b.flats ?? prefersFlats(song.keyRoot, song.scale);
   const chordless = !!drill.chordless;
+  const legend = { roles: ROLE_LEGEND, fingers: FINGER_LEGEND, none: [] }[drill.legend ?? (chordless ? 'fingers' : 'roles')];
+  // An ear drill keeps its answers (the notes lighting up, the tab) hidden
+  // until you ask for them.
+  let reveal = !drill.ear;
 
   const cat = CATEGORIES.find((c) => c.id === drill.category);
   root.append(h('header.drill-hero',
@@ -134,7 +162,7 @@ export function mountDrill(root, app) {
   const fbHolder = h('div.fb-holder');
   const controls = h('div.fb-controls');
   root.append(h('section.neck', { 'aria-label': 'Fretboard' },
-    h('div.neck-top', readout, h('div.legend', (chordless ? FINGER_LEGEND : ROLE_LEGEND).map(([r, l]) => h('span', h('i', { class: `sw role-${r}` }), l)))),
+    h('div.neck-top', readout, h('div.legend', legend.map(([r, l]) => h('span', h('i', { class: `sw role-${r}` }), l)))),
     h('div.fb-scroll', fbHolder),
     controls));
 
@@ -191,8 +219,9 @@ export function mountDrill(root, app) {
     const p = store.state.drill;
     const ctl = [];
     if (drill.keyed) {
-      ctl.push(h('div.ctl', h('span.ctl-label', 'Key'),
-        h('select', { 'aria-label': 'Key', onchange: (e) => setParams({ key: e.target.value }) },
+      const keyLabel = drill.keyLabel ?? 'Key';
+      ctl.push(h('div.ctl', h('span.ctl-label', keyLabel),
+        h('select', { 'aria-label': keyLabel, onchange: (e) => setParams({ key: e.target.value }) },
           KEYS.map((k) => h('option', { value: k, selected: k === p.key }, k)))));
     }
     if (drill.stops) {
@@ -236,7 +265,11 @@ export function mountDrill(root, app) {
     put(clear(runPanel),
       h('div.ctl',
         h('button.toggle', { type: 'button', 'aria-pressed': String(demoOn), class: demoOn ? 'on' : '', title: 'Hear the drill played, or mute it and play it yourself', onclick: () => store.set({ mutes: { ...st.mutes, demo: demoOn } }) }, 'Demo guitar'),
-        h('button.toggle', { type: 'button', 'aria-pressed': String(bandOn), class: bandOn ? 'on' : '', onclick: () => store.set({ mutes: { ...st.mutes, ...Object.fromEntries(bandParts().map((pid) => [pid, bandOn])) } }) }, song.parts.some((x) => x.id === 'bass') ? 'Band' : 'Click track')),
+        h('button.toggle', { type: 'button', 'aria-pressed': String(bandOn), class: bandOn ? 'on' : '', onclick: () => store.set({ mutes: { ...st.mutes, ...Object.fromEntries(bandParts().map((pid) => [pid, bandOn])) } }) }, song.parts.some((x) => x.id === 'bass') ? 'Band' : 'Click track'),
+        drill.ear ? h('button.toggle.reveal', {
+          type: 'button', 'aria-pressed': String(reveal), class: reveal ? 'on' : '', title: 'Light up the notes as they play, and show the tab',
+          onclick: () => { reveal = !reveal; renderRun(); renderTab(); },
+        }, 'Show the notes') : null),
       choices.length ? h('div.ctl', h('span.ctl-label', 'Move on'),
         segmented('Move on', [{ value: null, label: 'Off' }, ...choices], how, (v) => store.set({ move: { ...store.state.move, how: v }, drillLoop: 0 }), { small: true })) : null,
       how ? h('div.ctl', h('span.ctl-label', 'Every'),
@@ -258,13 +291,9 @@ export function mountDrill(root, app) {
     h('div.panel-head', h('h2', 'How to practise it')),
     drill.body.map((x) => h('p', x)),
     h('ol.lesson-steps', drill.steps.map((x) => h('li', x))),
-    drill.video ? h('div.drill-video',
-      h('h3', 'In the video'),
-      h('ul.chapters', drill.video.map((t) => {
-        const c = VIDEO.chapters.find((x) => x.t === t);
-        return h('li', h('a.ch-t', { href: videoAt(t), target: '_blank', rel: 'noopener' }, clock(t)), h('span.ch-body', h('strong', c.title), h('span.muted', c.note)));
-      })),
-      h('p.fine', VIDEO.title, ' · ', VIDEO.channel)) : null);
+    lessonsFor(drill.id).length ? h('div.drill-lessons',
+      h('h3', 'Read the lesson'),
+      h('ul', lessonsFor(drill.id).map((l) => h('li', h('a', { href: `#/book/learn/${l.id}` }, l.title), h('span.muted', ` · ${l.summary}`))))) : null);
 
   let tabToken = 0;
   async function renderTab() {
@@ -272,6 +301,10 @@ export function mountDrill(root, app) {
     const sec = song.sections.drill;
     const v = sec.parts.demo[0];
     clear(tab).append(h('div.panel-head', h('h2', 'Tab'), h('p.muted', `${sec.bars} bar${sec.bars > 1 ? 's' : ''}, looping`)));
+    if (!reveal) {
+      tab.append(h('p.muted.tab-hidden', 'The tab gives the answers away. Use Show the notes when you want to check yourself.'));
+      return;
+    }
     const fig = h('figure.drill-sheet');
     tab.append(fig);
     if (v.type === 'notes') {
@@ -300,7 +333,7 @@ export function mountDrill(root, app) {
   };
   const onEvent = (e) => {
     const { partId, ev } = e.detail;
-    if (partId !== 'demo') return;
+    if (partId !== 'demo' || !reveal) return;
     for (const n of ev.notes ?? (ev.string ? [ev] : [])) {
       if (n.string) fretboard.ping(n.string, n.fret, roleOf(fretMidi(n.string, n.fret), refNow()));
     }
