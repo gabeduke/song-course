@@ -53,7 +53,7 @@ export function mountSheet(root, app) {
           const fig = h('figure.sheet-part');
           block.append(fig);
           fig.append(h('figcaption', h('strong', part.name), ` ${v.name}`));
-          if (['notes', 'degrees', 'arpeggio', 'bassline', 'hands'].includes(v.type) || (v.type === 'comp' && part.instrument === 'keys')) {
+          if (['notes', 'degrees', 'arpeggio', 'bassline', 'hands', 'pedal'].includes(v.type) || (v.type === 'comp' && part.instrument === 'keys')) {
             const events = v.events;
             const length = (v.type === 'notes' || v.type === 'hands') && v.length ? Math.min(v.length, sec.length) : sec.length;
             await renderNotation(fig, {

@@ -48,6 +48,14 @@ export function mountPractice(root, app) {
     return sym;
   }
 
+  /** The chord change sounding now (the first one when stopped) and where it ends. */
+  function chordSpan(sectionId) {
+    const sec = song.sections[sectionId];
+    const change = [...sec.changes].reverse().find((c) => c.t <= Math.max(0, live.step)) ?? sec.changes[0];
+    const end = sec.changes.find((c) => c.t > change.t)?.t ?? sec.length;
+    return { from: change.t, end };
+  }
+
   function nextChord(sectionId, step) {
     const sec = song.sections[sectionId];
     const after = sec.changes.find((c) => c.t > step);
@@ -133,12 +141,10 @@ export function mountPractice(root, app) {
     } else {
       const pid = keysPartId();
       const v = pid ? player.variationFor(live.sectionId ?? st.sectionId, pid) : null;
-      const sec = song.sections[live.sectionId ?? st.sectionId];
-      const change = [...sec.changes].reverse().find((c) => c.t <= Math.max(0, live.step)) ?? sec.changes[0];
-      const next = sec.changes.find((c) => c.t > change.t)?.t ?? sec.length;
+      const span = chordSpan(live.sectionId ?? st.sectionId);
       const seen = new Map();
       for (const ev of v?.events ?? []) {
-        if (ev.kind !== 'note' || ev.t < change.t || ev.t >= next) continue;
+        if (ev.kind !== 'note' || ev.t < span.from || ev.t >= span.end) continue;
         const hand = ev.hand ?? (ev.midi < 52 ? 'L' : 'R');
         if (!seen.has(ev.midi)) seen.set(ev.midi, hand);
       }
@@ -240,7 +246,26 @@ export function mountPractice(root, app) {
       }
     } else if (fb.layer === 'shape') {
       const v = focusVariation();
-      if (v && (v.type === 'notes' || v.type === 'degrees')) {
+      if (v?.type === 'pedal') {
+        // Only this chord's notes: the held pedal ringed, the hand's four
+        // frets banded, and the labels counted from the pedal.
+        const span = chordSpan(live.sectionId ?? st.sectionId);
+        const evs = v.events.filter((e) => e.t >= span.from && e.t < span.end);
+        const pedal = evs.find((e) => e.pedal) ?? evs[0];
+        const seen = new Set();
+        for (const ev of evs) {
+          const key = `${ev.string}:${ev.fret}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          dots.push({
+            string: ev.string, fret: ev.fret,
+            role: intervalRole(ev.midi - pedal.midi),
+            label: fb.labels === 'fingers' ? String(ev.finger) : label(ev.midi, pedal.midi),
+            ring: !!ev.pedal,
+          });
+        }
+        if (pedal) band = [pedal.box, pedal.box + 3];
+      } else if (v && (v.type === 'notes' || v.type === 'degrees')) {
         const seen = new Set();
         for (const ev of v.events) {
           if (!ev.string) continue;
@@ -290,6 +315,11 @@ export function mountPractice(root, app) {
         segmented('Follow part', guitarParts.map((p) => ({ value: p.id, label: p.name })), fb.part, (v) => setFb({ part: v }), { small: true })));
     }
     const layers = isKeys() ? LAYERS.filter((l) => l.value !== 'triads') : LAYERS;
+    // Fingers, where the part says which finger plays each note (pedal tones).
+    const fingered = !isKeys() && fb.layer === 'shape' && !!focusVariation()?.events.some((e) => e.finger !== undefined);
+    const labelOpts = [{ value: 'notes', label: 'Notes' }, { value: 'intervals', label: 'Intervals' }];
+    if (fingered) labelOpts.push({ value: 'fingers', label: 'Fingers' });
+    const labelValue = fb.labels === 'fingers' && !fingered ? 'notes' : fb.labels;
     const layerValue = isKeys() && fb.layer === 'triads' ? 'chord' : fb.layer;
     if (isKeys()) extra.length = 0;
     if (isKeys() && fb.layer === 'scale') {
@@ -305,7 +335,7 @@ export function mountPractice(root, app) {
       keysParts.length ? h('div.ctl', segmented('Instrument', [{ value: 'guitar', label: 'Guitar' }, { value: 'keys', label: 'Keys' }], fb.instrument ?? 'guitar', (v) => store.set({ fb: { ...store.state.fb, instrument: v }, ...(song.lessons.some((l) => l.instrument === v) ? { lessonFilter: v } : {}) }))) : null,
       h('div.ctl', segmented('Layer', layers, layerValue, (v) => setFb({ layer: v }))),
       ...extra,
-      h('div.ctl.ctl-end', segmented('Labels', [{ value: 'notes', label: 'Notes' }, { value: 'intervals', label: 'Intervals' }], fb.labels, (v) => setFb({ labels: v }), { small: true })),
+      h('div.ctl.ctl-end', segmented('Labels', labelOpts, labelValue, (v) => setFb({ labels: v }), { small: true })),
     );
   }
 
@@ -537,7 +567,10 @@ export function mountPractice(root, app) {
       }
       if ('selection' in patch || 'mutes' in patch || 'solo' in patch) {
         if (!('sectionId' in patch)) renderParts();
-        if (st.fb.layer === 'shape') renderNeck();
+        if (st.fb.layer === 'shape') {
+          if ('selection' in patch && !('fb' in patch)) renderControls(); // Fingers comes and goes with the part
+          renderNeck();
+        }
       }
       if ('lessonId' in patch || 'lessonFilter' in patch) { renderLessons(); renderLab({ reveal: 'lessonId' in patch }); }
       if ('volumes' in patch) {

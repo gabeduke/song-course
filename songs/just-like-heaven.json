@@ -14,7 +14,8 @@
     "Bm without fear",
     "Triads on two string sets",
     "Driving eighth-note strum",
-    "Guide-tone melodies"
+    "Guide-tone melodies",
+    "Pinched pedal tones with hybrid picking"
   ],
   "notes": "Chord progression and practice parts only. The melody line here is an original guide-tone exercise, not the song's riff or vocal.",
   "parts": [
@@ -312,6 +313,19 @@
                 "d": 8
               }
             ]
+          },
+          {
+            "id": "pedal-pinch",
+            "name": "Pedal pinches",
+            "type": "pedal",
+            "grid": "8",
+            "pattern": "P+3 P+5 P+6 P+5",
+            "string": [
+              4,
+              3
+            ],
+            "finger": 3,
+            "near": 7
           }
         ]
       }
@@ -524,6 +538,35 @@
         }
       },
       "instrument": "guitar"
+    },
+    {
+      "id": "pedal-pinch",
+      "instrument": "guitar",
+      "title": "Pinch a pedal tone",
+      "goal": "Hold each root with your ring finger and play it together with the notes above it.",
+      "body": [
+        "A pedal tone doesn't have to alternate with the other notes. Here your ring finger holds each chord's root, and you play it at the same moment as a note above it: the 3rd, the 5th, the 6th, then the 5th again. Pick the pedal and pluck the top note with your middle finger (hybrid picking) so both ring.",
+        "The ring finger leads the hand from chord to chord: A on the D string at the 7th fret, E on the G string at the 9th, B on the D string at the 9th, D on the G string at the 7th. It never moves more than two frets."
+      ],
+      "steps": [
+        "Listen once with the neck on Fingers. The ringed dot is your ring finger, held for the whole bar.",
+        "Mute the lead part and play it at 84: the pick on the pedal, your middle finger on the top note, both at once.",
+        "In every bar the 6th is your little finger, on the same fret as your ring finger and two strings higher. Keep the ring finger pressed down while the little finger plays.",
+        "Then hold the roots with your middle finger instead and work out where the 3rd, 5th and 6th are from there."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 84,
+        "select": {
+          "lead": "pedal-pinch",
+          "rhythm": "open"
+        },
+        "fretboard": {
+          "layer": "shape",
+          "part": "lead",
+          "labels": "fingers"
+        }
+      }
     },
     {
       "id": "keys-drive",

@@ -5,7 +5,7 @@
 
 import {
   parseChord, pcOf, mod12, chordTone, scalePcs, parseShape, shapeMidis, defaultVoicing,
-  midiOf, placeOnNeck, fretMidi, BASS_TUNING, SCALES,
+  midiOf, placeOnNeck, fretMidi, TUNING, BASS_TUNING, SCALES,
 } from './theory.js';
 
 export const INSTRUMENTS = ['drums', 'bass', 'guitar', 'keys'];
@@ -298,6 +298,120 @@ function compileNotes(v, ctx, instrument) {
   return events.sort((a, b) => a.t - b.t);
 }
 
+/**
+ * Where the pedal sits for this chord: a degree (default "R") or an exact
+ * note ("B3") that stays put, on whichever of `strings` puts it nearest fret
+ * v.near. The finger holding it fixes the hand: one finger per fret from `box`.
+ */
+function placePedal(v, ctx, chord, strings, finger) {
+  const tok = String(v.pedal ?? 'R');
+  const exact = /^[A-G][#b]?-?\d$/.test(tok) ? midiOf(tok) : null;
+  const pc = exact === null ? mod12(resolveDegree(tok, { chord, nextChord: chord, keyRoot: ctx.keyRoot, scale: ctx.scale, range: [48, 59] })) : null;
+  const near = v.near ?? 5;
+  let best = null;
+  for (const string of strings) {
+    const open = TUNING[string - 1];
+    for (let f = finger; f <= 15; f++) {
+      if (exact !== null ? open + f !== exact : mod12(open + f) !== pc) continue;
+      if (!best || Math.abs(f - near) < Math.abs(best.fret - near)) best = { string, fret: f };
+    }
+  }
+  if (!best) throw new Error(`Pedal ${tok} isn't on string ${strings.join(' or ')} between frets ${finger} and 15`);
+  return { ...best, midi: TUNING[best.string - 1] + best.fret, finger, box: best.fret - finger + 1 };
+}
+
+/**
+ * A note above the pedal, under the fingers that are free: on a higher
+ * string, inside the box (a fret's stretch either side if it must), nearest
+ * strings first. If its finger is already down on another string, the next
+ * finger shares that fret, on the side that keeps the fingers from crossing
+ * (the lower finger on the thicker string, as in an A chord).
+ */
+function reachAbove(midi, pedal, used) {
+  let best = null;
+  for (let s = 1; s < pedal.string; s++) {
+    if (used.strings.has(s)) continue;
+    const f = midi - TUNING[s - 1];
+    if (f < 0) continue;
+    let finger = f - pedal.box + 1;
+    let cost = (pedal.string - 1 - s) * 2;
+    if (f === 0) { finger = 0; cost += 2.5; }
+    else if (finger === 0 || finger === 5) {
+      // a fret's stretch for the index or little finger, if it's free
+      finger = finger === 0 ? 1 : 4;
+      if (used.fingers.has(finger)) continue;
+      cost += 3;
+    } else if (finger < 1 || finger > 4) continue;
+    if (finger && used.fingers.has(finger)) {
+      const free = used.fingers.get(finger) > s ? finger + 1 : finger - 1;
+      if (free < 1 || free > 4 || used.fingers.has(free)) continue;
+      finger = free;
+      cost += 2;
+    }
+    if (!best || cost < best.cost) best = { string: s, fret: f, finger, cost };
+  }
+  return best;
+}
+
+/**
+ * A degree's pitch class over this chord. Plain 2, 4 and 6 are the key's next
+ * scale steps up from the root (over A in B mixolydian, 4 is D#), so a walk
+ * up from the pedal never plays the same note twice; the rest are as in
+ * resolveDegree.
+ */
+function stepAbove(tok, chord, ctx) {
+  const pcs = scalePcs(ctx.keyRoot, ctx.scale);
+  const at = pcs.indexOf(chord.root);
+  if (/^[246]$/.test(tok) && pcs.length === 7 && at >= 0) return pcs[(at + Number(tok) - 1) % 7];
+  return mod12(resolveDegree(tok, { chord, nextChord: chord, keyRoot: ctx.keyRoot, scale: ctx.scale, range: [48, 59] }));
+}
+
+/** Hold one note (the pedal) with one finger while the others move around it. */
+function compilePedal(v, ctx) {
+  const step = gridOf(v, '16');
+  const toks = stripBars(v.pattern ?? 'P 2 P 3').trim().split(/\s+/).filter(Boolean);
+  const len = toks.length * step;
+  const strings = [v.string ?? 4].flat();
+  const finger = v.finger ?? 1;
+  if (!strings.every((s) => s >= 2 && s <= 6)) throw new Error('"string" is where the pedal sits: 2 to 6, so there\'s a higher string to move on');
+  if (![1, 2, 3, 4].includes(finger)) throw new Error('"finger" holds the pedal: 1 (index) to 4 (little finger)');
+  const events = [];
+  for (let t = 0; t < ctx.length; t += step) {
+    const idx = Math.floor((t % len) / step);
+    const tok = toks[idx];
+    if (tok === '.' || tok === '-') continue;
+    let holds = 0;
+    for (let j = 1; j < toks.length && toks[(idx + j) % toks.length] === '-'; j++) holds++;
+    const d = Math.min(step * (1 + holds), ctx.length - t);
+    const chord = ctx.chordAt(t);
+    const pedal = placePedal(v, ctx, chord, strings, finger);
+    const { string } = pedal;
+    const used = { fingers: new Map([[finger, string]]), strings: new Set([string]) };
+    for (const part of tok.split('+')) {
+      if (part === 'P') {
+        // it rings until it's picked again or the chord changes
+        let next = 1;
+        while (next < toks.length && !toks[(idx + next) % toks.length].split('+').includes('P')) next++;
+        const ring = Math.min(next * step, ctx.chordEnd(t) - t, ctx.length - t);
+        events.push({ t, d: ring, kind: 'note', midi: pedal.midi, string, fret: pedal.fret, finger, box: pedal.box, pedal: true, vel: 0.75, chord: chord.symbol });
+        continue;
+      }
+      let base = part;
+      let up = 0;
+      while (base.endsWith("'")) { up += 12; base = base.slice(0, -1); }
+      const exact = /^[A-G][#b]?-?\d$/.test(base);
+      const pc = exact ? null : stepAbove(base, chord, ctx);
+      const midi = exact ? midiOf(base) + up : pedal.midi + (mod12(pc - pedal.midi) || 12) + up;
+      const spot = reachAbove(midi, pedal, used);
+      if (!spot) throw new Error(`Over ${chord.symbol}, "${part}" is out of reach with finger ${finger} holding the pedal on string ${string}, fret ${pedal.fret}: try another finger, string or "near"`);
+      used.strings.add(spot.string);
+      if (spot.finger) used.fingers.set(spot.finger, spot.string);
+      events.push({ t, d, kind: 'note', midi, string: spot.string, fret: spot.fret, finger: spot.finger, box: pedal.box, vel: 0.85, chord: chord.symbol });
+    }
+  }
+  return events;
+}
+
 /** Two-handed keyboard part: left-hand degrees, right-hand chords and/or melody. */
 function compileHands(v, ctx) {
   const out = [];
@@ -325,6 +439,7 @@ const COMPILERS = {
   arpeggio: compileArpeggio,
   comp: compileComp,
   notes: compileNotes,
+  pedal: compilePedal,
 };
 
 export const VARIATION_TYPES = Object.keys(COMPILERS);

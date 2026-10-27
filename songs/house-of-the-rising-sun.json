@@ -14,7 +14,8 @@
     "The F chord, easy and full barre",
     "Minor and seventh chord colours",
     "Harmonic minor",
-    "A minor pentatonic"
+    "A minor pentatonic",
+    "Arpeggios over a held root"
   ],
   "notes": "Traditional song. Parts are practice arrangements.",
   "parts": [
@@ -200,6 +201,19 @@
                 "d": 12
               }
             ]
+          },
+          {
+            "id": "pedal-arp",
+            "name": "Pedal arpeggio",
+            "type": "pedal",
+            "grid": "8",
+            "pattern": "P 3 5 8 5 3",
+            "string": [
+              6,
+              5
+            ],
+            "finger": 4,
+            "near": 2
           }
         ]
       }
@@ -369,6 +383,35 @@
         }
       },
       "instrument": "guitar"
+    },
+    {
+      "id": "pedal-arpeggio",
+      "instrument": "guitar",
+      "title": "Arpeggios over a held root",
+      "goal": "Keep the root down with your little finger while the chord rolls above it.",
+      "body": [
+        "Your little finger holds each chord's root on the low E or A string and keeps it ringing for the whole bar, while your other fingers roll up the 3rd, 5th and octave and back down.",
+        "The little finger is the hardest one to hold a note with, which is why it's worth doing. With it busy, your index, middle and ring fingers have to find each chord on their own, and the shapes they make are smaller versions of chord shapes you already know."
+      ],
+      "steps": [
+        "Listen with the neck on Fingers. The ringed dot is your little finger, held down from the first note of the bar to the last.",
+        "Mute the lead part and play it at 90. Pick down, down, down going up the strings and up, up coming back down (economy picking). Played fast, that becomes a sweep.",
+        "Your hand moves two or three frets from one chord to the next. Put your little finger on the new root first and let the other fingers follow it.",
+        "Then hold the roots with your ring finger instead and find the same notes from there."
+      ],
+      "setup": {
+        "section": "verse",
+        "tempo": 90,
+        "select": {
+          "lead": "pedal-arp",
+          "rhythm": "strum"
+        },
+        "fretboard": {
+          "layer": "shape",
+          "part": "lead",
+          "labels": "fingers"
+        }
+      }
     },
     {
       "id": "keys-68",

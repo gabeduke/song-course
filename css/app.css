@@ -383,6 +383,7 @@ input[type='range'] { accent-color: var(--accent); }
 .strum .tok { font-size: 1.15rem; }
 .strum .tok.light { color: var(--muted); font-size: 0.95rem; }
 .strum .tok.chuck { color: var(--seventh); }
+.tok.pedal { color: var(--root); }
 .strum-detail { display: flex; flex-direction: column; gap: 10px; }
 .chord-boxes { display: flex; flex-wrap: wrap; gap: 10px; }
 

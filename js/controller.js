@@ -134,7 +134,7 @@ export function createController(app) {
     labels: {
       label: 'Labels', short: 'Labels',
       apply: (c, v) => stepped(c, v, ['notes', 'intervals'], (labels) => setFb({ labels })),
-      text: () => (st().fb.labels === 'intervals' ? 'Intervals' : 'Note names'),
+      text: () => ({ intervals: 'Intervals', fingers: 'Fingers' }[st().fb.labels] ?? 'Note names'),
     },
   };
 
