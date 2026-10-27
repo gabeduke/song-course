@@ -209,7 +209,7 @@ export class Player extends EventTarget {
             case 'note':
               if (part.instrument === 'bass') eng.bass(ev.midi, t, evDur, ev.vel, out);
               else if (part.instrument === 'keys') eng.epiano(ev.midi, t, evDur, ev.vel, out);
-              else eng.pluck(ev.midi, t, ev.vel, out, { string: ev.string, busId: part.id, dur: v.type === 'notes' || v.type === 'degrees' ? Math.max(evDur, 0.12) : null });
+              else eng.pluck(ev.midi, t, ev.vel, out, { string: ev.string, busId: part.id, dur: ['notes', 'degrees', 'pedal'].includes(v.type) ? Math.max(evDur, 0.12) : null });
               break;
             default: break;
           }

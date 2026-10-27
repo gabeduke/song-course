@@ -14,7 +14,8 @@
     "Triads on the top strings",
     "Sixteenth-note strumming",
     "Mixolydian scale",
-    "Targeting chord tones"
+    "Targeting chord tones",
+    "Pedal tones: one finger holds, the others move"
   ],
   "notes": "Chord progression and practice parts only. The fills here are original exercises in the style, not transcriptions.",
   "parts": [
@@ -404,6 +405,22 @@
                 "d": 4
               }
             ]
+          },
+          {
+            "id": "pedal-pinky",
+            "name": "Pedal (little finger)",
+            "type": "pedal",
+            "pattern": "P 2 P 3 P 5 P 3",
+            "string": 4,
+            "finger": 4
+          },
+          {
+            "id": "pedal-index",
+            "name": "Pedal (index finger)",
+            "type": "pedal",
+            "pattern": "P 4 P 5 P 8 P 5",
+            "string": 4,
+            "finger": 1
           }
         ]
       }
@@ -728,6 +745,37 @@
         }
       },
       "instrument": "guitar"
+    },
+    {
+      "id": "pedal-tones",
+      "instrument": "guitar",
+      "title": "Hold a pedal tone",
+      "goal": "Keep one note held down while your other fingers move around it.",
+      "body": [
+        "A pedal tone is one note you keep holding, and keep going back to, while other notes move around it. Keeping it pressed down with one finger while the other three work is hard, which is the point: your fingers learn to move on their own, and you learn the notes that sit around the one you hold. Guitar teacher David Chubirka calls it the most worthwhile practice there is, whatever your level.",
+        "Here the pedal is the chord's root on the D string: B at the 9th fret, then A at the 7th. Pick the pedal, then a note on a higher string, then the pedal again. On the neck the ringed dot is the pedal and the numbers are your fingers.",
+        "Which finger holds the pedal decides which notes are under the others. With your little finger on B, your hand covers frets 6 to 9, so the 2nd and 3rd are on the G string and the 5th is on the B string. With your index on B, your hand covers frets 9 to 12 and you get the 4th, the 5th and the octave instead."
+      ],
+      "steps": [
+        "Listen to \"Pedal (little finger)\" a few times. Your little finger stays down for the whole bar and only moves when the chord changes.",
+        "Mute the lead part and play it at 72. Alternate pick: down on the pedal, up on the other note.",
+        "Pick \"Pedal (index finger)\" and play that. The pedal is the same B, but your hand is in a different place, so different notes are under your fingers.",
+        "Now hold the pedal with your ring finger, then your middle finger. Find the 2nd, 3rd, 4th and 5th from each, and notice which ones you can't reach.",
+        "Once the move from B to A is clean, change how you pick it: economy picking, then hybrid picking (the pick for the pedal, your middle finger for the other note)."
+      ],
+      "setup": {
+        "section": "vamp",
+        "tempo": 72,
+        "select": {
+          "lead": "pedal-pinky",
+          "rhythm": "barre"
+        },
+        "fretboard": {
+          "layer": "shape",
+          "part": "lead",
+          "labels": "fingers"
+        }
+      }
     },
     {
       "id": "keys-hands",

@@ -14,7 +14,8 @@
     "12-bar form",
     "Boogie riff",
     "Minor pentatonic boxes",
-    "Major vs minor pentatonic"
+    "Major vs minor pentatonic",
+    "The boogie as a pedal tone, with a stretch"
   ],
   "notes": "Generic blues form. All parts are original practice material.",
   "parts": [
@@ -209,6 +210,19 @@
                 "d": 12
               }
             ]
+          },
+          {
+            "id": "pedal-boogie",
+            "name": "Pedal boogie",
+            "type": "pedal",
+            "grid": "8",
+            "pattern": "P+5 P+5 P+6 P+6",
+            "string": [
+              6,
+              5
+            ],
+            "finger": 1,
+            "near": 5
           }
         ]
       }
@@ -350,6 +364,35 @@
         }
       },
       "instrument": "guitar"
+    },
+    {
+      "id": "pedal-stretch",
+      "instrument": "guitar",
+      "title": "Stretch from a pedal tone",
+      "goal": "Hold the root with your index finger and stretch the boogie up the neck.",
+      "body": [
+        "The boogie riff is a pedal tone: the open A string keeps ringing while the 5th and 6th move above it. Up the neck there's no open string to do that, so a finger has to hold the root.",
+        "Your index finger holds the root, your ring finger plays the 5th two frets higher, and your little finger stretches to the 6th, four frets from your index. That stretch is the exercise. Over D7 the shape moves to the A string and your hand stays at the 5th fret; over E7 it slides up two frets."
+      ],
+      "steps": [
+        "Listen with the neck on Fingers. Your index finger (the ringed dot) never lifts during a chord.",
+        "Mute the lead part and play it at 80 with the shuffle. Keep your index finger flat on the root and let your little finger reach.",
+        "If the stretch hurts, stop and come back to it later. Your reach grows over days of short practice, not in one long session.",
+        "When it's comfortable, play the root and the upper note one after the other instead of together, and listen to the root keep ringing under the moving note."
+      ],
+      "setup": {
+        "section": "chorus",
+        "tempo": 80,
+        "select": {
+          "lead": "pedal-boogie",
+          "rhythm": "stabs"
+        },
+        "fretboard": {
+          "layer": "shape",
+          "part": "lead",
+          "labels": "fingers"
+        }
+      }
     },
     {
       "id": "keys-boogie",

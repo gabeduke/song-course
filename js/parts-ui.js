@@ -16,7 +16,7 @@ function cells(tokens, gridSteps, cls, render) {
 }
 
 export function variationDetail(v, { section, song, compact = false }) {
-  const grid = GRID[String(v.grid ?? (v.type === 'drums' ? '16' : '8'))] ?? 2;
+  const grid = GRID[String(v.grid ?? (v.type === 'drums' || v.type === 'pedal' ? '16' : '8'))] ?? 2;
   switch (v.type) {
     case 'drums': {
       const lanes = DRUM_LANES.filter((l) => v.pattern?.[l]);
@@ -60,6 +60,15 @@ export function variationDetail(v, { section, song, compact = false }) {
     }
     case 'notes':
       return miniTab(v, section);
+    case 'pedal': {
+      // the pattern (P, the pedal, in the root colour), then the tab it makes
+      const toks = String(v.pattern ?? '').replace(/\|/g, ' ').trim().split(/\s+/);
+      const row = cells(toks, grid, 'tokens', (tok, i) => h('span.tok', {
+        class: `${tok === '.' || tok === '-' ? 'rest' : ''} ${tok.split('+').includes('P') ? 'pedal' : ''}`,
+        dataset: { i },
+      }, tok === '.' ? '' : tok === '-' ? '–' : tok));
+      return compact ? row : h('div.strum-detail', row, miniTab(v, section));
+    }
     default:
       return h('p.muted', v.type);
   }

@@ -9,6 +9,7 @@ Static site, no build step. Songs are flat JSON files in [`songs/`](songs/).
 - **Practice**: a big interactive fretboard (or keyboard) that follows the music. Layers for chord tones, three-string triads by string set, scale positions 1–5, or exactly what the chosen part is playing. Colours mean the same thing everywhere: amber root, teal third, periwinkle fifth, rose seventh.
 - **Backing band**: drums, bass, plucked guitar and electric piano, all synthesized in the browser. Every part has variations (strum patterns, triad voicings, bass lines, fills) you swap while it loops. Mute, solo, tempo, count-in, click, swing.
 - **Lessons**: an ordered set per song, split into tracks (Guitar, Keys, Drums, Synth). "Set up this exercise" loads the loop, tempo, variations and fretboard layer for you.
+- **Pedal tones**: every song has a guitar lesson where one finger holds a note while the others move around it, a drill David Chubirka calls the best practice there is. A `pedal` part follows the chords, works out a fingering for the finger you choose, and the neck shows that chord's notes with the pedal ringed, the hand's four frets banded, and the Fingers labels saying which finger plays what.
 - **Sheet**: chord charts, standard notation and tab (grand staff for keys), strum patterns and chord boxes. Prints cleanly.
 - **Capture**: record a pass from a MIDI keyboard, tap notes in on the fretboard, or program drums on a pad grid. Save it to the song as a new variation, then download the song file and commit it.
 - **New songs**: type a title, key and chord chart and you get a playable band to write over.
@@ -20,10 +21,10 @@ Static site, no build step. Songs are flat JSON files in [`songs/`](songs/).
 
 | Song | What it drills |
 | --- | --- |
-| Fire on the Mountain | Barre changes, triads at three neck positions, sixteenth strumming, B mixolydian, melodies from inside the chord shape |
-| Just Like Heaven | Open-chord changes at speed, voice-led triads on two string sets, guide-tone melodies, FM bell design |
-| House of the Rising Sun | 6/8 arpeggios, the F barre, seventh-chord colours, harmonic minor, A minor pentatonic |
-| 12-Bar Shuffle in A | Shuffle feel, the form, boogie riff, connecting pentatonic boxes, major vs minor pentatonic |
+| Fire on the Mountain | Barre changes, triads at three neck positions, sixteenth strumming, B mixolydian, melodies from inside the chord shape, a pedal tone held by the little finger and then the index |
+| Just Like Heaven | Open-chord changes at speed, voice-led triads on two string sets, guide-tone melodies, pinched pedal tones with hybrid picking, FM bell design |
+| House of the Rising Sun | 6/8 arpeggios, the F barre, seventh-chord colours, harmonic minor, A minor pentatonic, arpeggios over a root held by the little finger |
+| 12-Bar Shuffle in A | Shuffle feel, the form, boogie riff, connecting pentatonic boxes, major vs minor pentatonic, the boogie as a pedal tone with a stretch |
 
 Song files hold chord progressions and original practice parts, not transcriptions of the recordings.
 

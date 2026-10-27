@@ -135,6 +135,24 @@ String numbers, 1 = high e. `B` is the chord's lowest string. Join with `+` to p
 
 `t` is the start in sixteenths from the start of the section, `d` the length in sixteenths. Guitar notes use `s` (string, 1 = high e) and `f` (fret) so tab is exact; keys use `n`. `h` marks the hand (`L`/`R`) for keys. `length` loops the phrase inside the section.
 
+### `pedal` — hold one note, move around it (guitar, grid `16`)
+
+```json
+{ "id": "pedal-pinky", "name": "Pedal (little finger)", "type": "pedal",
+  "pattern": "P 2 P 3 P 5 P 3", "string": 4, "finger": 4 }
+```
+
+A pedal tone is a note one finger holds down while the others play around it. `P` picks the pedal; it rings until it's picked again or the chord changes. The other tokens are degrees of the current chord, as in bass lines, placed above the pedal: `3` `5` `7` are the chord's own, plain `2` `4` `6` the key's next scale steps up from the root (over A in B mixolydian, `4` is D#), `8` the octave, `'` an octave higher, or an exact note (`E4`). `+` plays notes together (`P+3`), `.` rests, `-` holds.
+
+| Field | Meaning |
+| --- | --- |
+| `pedal` | The held note: a degree of each chord (`R` by default, so it follows the changes), or an exact note (`A3`) held through every chord. |
+| `string` | The string it sits on, 2 to 6 (default 4), or a list (`[6, 5]`): whichever puts it nearest `near`. |
+| `finger` | Which finger holds it, 1 (index) to 4 (little finger), default 1. The hand then covers four frets, one finger each, and the other notes go on higher strings inside them, a fret's stretch either side if they must. Two fingers share a fret the way they do in an A chord, the lower finger on the thicker string. |
+| `near` | The fret the pedal should sit nearest (default 5). |
+
+Each note gets the finger that plays it; the neck shows them with the Fingers labels. Which finger holds the pedal decides what the others can reach, so a note the hand can't get to (the 2nd with the index holding a pedal on the D string, say) is an error that says which chord and token, rather than a jump across the neck.
+
 ## Arrangement
 
 ```json
@@ -172,7 +190,7 @@ A lesson can also open a lab, an interactive panel under the neck for as long as
 
 `lab` is `fm`, the FM lab: four operators, their wiring, a waveform and a spectrum with the predicted sidebands, and keys to play it (a MIDI keyboard plays it too). `patch` is the sound it starts from: `sine`, `organ`, `bell`, `epiano`, `bass` or `brass` (`organ` if left out). The patches and the wiring are in [`js/fm.js`](../js/fm.js).
 
-`instrument` groups lessons into tracks (Guitar, Keys, Drums, Synth, or anything else). "Set up this exercise" applies `setup`: it loops the section, sets the tempo, picks variations everywhere they exist, mutes or solos parts, and points the fretboard (or keyboard, for keys and synth lessons) at the right layer. Fretboard layers: `chord`, `triads`, `scale`, `shape` (the selected part). Triad string sets: `all`, `123`, `234`, `345`, `456`.
+`instrument` groups lessons into tracks (Guitar, Keys, Drums, Synth, or anything else). "Set up this exercise" applies `setup`: it loops the section, sets the tempo, picks variations everywhere they exist, mutes or solos parts, and points the fretboard (or keyboard, for keys and synth lessons) at the right layer. Fretboard layers: `chord`, `triads`, `scale`, `shape` (the selected part). Triad string sets: `all`, `123`, `234`, `345`, `456`. Labels: `notes`, `intervals`, or `fingers` for a `pedal` part.
 
 ## A note on copyright
 

@@ -151,7 +151,7 @@ export class Fretboard {
       if (d.fret > this.frets) continue;
       const x = this.noteX(d.fret);
       const y = this.sy(d.string);
-      const dot = s('g', { class: `fb-dot role-${d.role}${d.faint ? ' faint' : ''}${d.ring ? ' ring' : ''}`, transform: `translate(${x} ${y})` },
+      const dot = s('g', { class: `fb-dot role-${d.role}${d.faint ? ' faint' : ''}${d.ring ? ' ring' : ''}`, transform: `translate(${x} ${y})`, 'data-string': d.string, 'data-fret': d.fret },
         d.ring ? s('circle', { r: 14.5, class: 'fb-ring' }) : null,
         s('circle', { r: 11 }),
         d.label ? s('text', { y: 4, 'text-anchor': 'middle' }, d.label) : null);

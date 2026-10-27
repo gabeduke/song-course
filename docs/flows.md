@@ -56,6 +56,7 @@ not here.
 | J2.3 | trust that every lesson in every starter song sets up what it says, from its own button | `j2.3-every-lesson` | core (desktop) |
 | J2.4 | see the exercise I just set up: the neck it changed is on screen after Set up, not scrolled away above the lessons | `j2.4-setup-in-view` | todo (tablet) |
 | J2.5 | open the Synth track's "How FM operators work" and get the FM lab under the neck: play a held note, raise operator 2's index and see sidebands appear on the harmonics, move its ratio to 3.5 and see them leave the grid (a bell), switch the wiring and see the diagram redraw; closing the lesson puts the lab away | `j2.5-fm-lab` | core (tablet, desktop, phone) |
+| J2.6 | open "Hold a pedal tone" and see the drill on the neck: the pedal ringed under the little finger, finger numbers on the other notes, the hand's frets banded; hear the band play the pedal under them, and the ring move when the chord does | `j2.6-pedal-tones` | core (tablet, desktop) |
 | J3.1 | read the chart, notation and tab of the variations I chose, or every variation, one section, with drums; it fits a phone | `j3.1-sheet` | core |
 | J3.2 | print the sheet without the app's bars and controls on the paper | `j3.2-print` | core |
 | J3.3 | have the sheet show what I chose in Practice, at the tempo I'm practising at, and keep up when I change it | `j3.3-sheet-follows` | core |
