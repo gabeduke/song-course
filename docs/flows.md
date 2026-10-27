@@ -22,6 +22,11 @@ already up). A run prints a table; paste it into your report.
   keyboard on a USB-C OTG adapter (1024×768 profile). The laptop
   (1440×900) is where songs get written, downloaded and committed. A phone
   (390×844) is for reading the sheet and a quick loop.
+- The **practice book** (Book in the top bar) is the daily routine: warm-ups,
+  triads, pentatonic boxes and scales that build themselves in any key and
+  at any spot on the neck, a session that strings them (and songs) together
+  on a clock, and the triad video's chapters. A drill plays through the
+  same transport and band as a song.
 - One song is open at a time, in one of three views: **Practice** (the neck
   or keyboard, the arrangement, the parts and the lessons), **Sheet**
   (chart, notation and tab) and **Capture** (tap or record a part, program
@@ -77,6 +82,11 @@ not here.
 | J7.5 | teach Woodshed my pads with Learn, then mute parts with the bottom row and loop sections with the top; it remembers them | `j7.5-learn-pads` | core |
 | J7.6 | have the keyboard's own engine play a band part, in time, while Woodshed's voice for it goes quiet; send it the clock so its arpeggiator follows | `j7.6-part-to-keyboard` | core |
 | J7.7 | finger-drum on the pads: in Capture on the drums they play the kit, and while the groove loops each hit lands in the grid where I struck it | `j7.7-pad-drums` | core |
+| J8.1 | open the practice book from any song: my session, the video's chapters, every drill by category, the songs; open a drill on its own page with the neck, how to practise it and its tab; the tabs take me back to the song | `j8.1-book` | core (tablet, desktop, phone) |
+| J8.2 | play a drill in any key and any box: the neck, the readout and the band follow, and while it plays they change without a stop or a new count-in; mute the demo guitar to play it myself | `j8.2-drill-key` | core |
+| J8.3 | let a drill move on by itself every so many loops, to the next box up the neck or the next key round the cycle of fourths, on the one, the band never stopping; it remembers the key, settings, tempo and how it moves on | `j8.3-move-on` | core |
+| J8.4 | add a drill to my session in the key I want, start the session, and let the clock walk me through it: each item opens with its own settings, Pause stops the clock, Next goes on (to a song too), Finish ends it | `j8.4-session` | core (tablet, desktop, phone) |
+| J8.5 | follow the triad video: its chapters link into it at their times and to the drill that practises each; soloing over changes shows the chord's triad lit and the key's other notes faint around it, moving with the chords | `j8.5-video-triads` | core |
 | U1 | see the whole neck and Play on a song's first screen on the tablet, without scrolling | `u1-first-screen` | todo (tablet) |
 
 J2.4 and U1 are proposals from the first review, not stories Gabe has

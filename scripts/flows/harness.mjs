@@ -68,6 +68,8 @@ const STATE_FN = `async () => {
     error: st.error, library: st.library, variations,
     sectionVariations: sec ? Object.fromEntries(Object.entries(sec.parts).map(([k, l]) => [k, l.map((v) => v.id)])) : {},
     draft: app.isDraft(), edited: app.isEdited(), rawId: app.raw?.id ?? null,
+    drillId: st.drillId, drill: st.drill, move: st.move, drillLoop: st.drillLoop,
+    session: { active: app.session.active, index: app.session.run?.index ?? null, paused: !!app.session.run && !app.session.run.since, routine: app.session.routine },
   };
 }`;
 

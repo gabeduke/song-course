@@ -295,7 +295,12 @@ export function scalePositions(rootPc, scale, { maxFret = 17 } = {}) {
     const notes = [];
     let i = 0;
     for (let s = 6; s >= 1; s--) {
-      for (let j = 0; j < 2; j++, i++) notes.push({ string: s, fret: pent[i] - TUNING[s - 1] });
+      for (let j = 0; j < 2; j++, i++) {
+        // A note that would sit behind the nut (E major's G# on the A
+        // string) goes on the next string down instead.
+        const f = pent[i] - TUNING[s - 1];
+        notes.push(f < 0 && s < 6 ? { string: s + 1, fret: pent[i] - TUNING[s] } : { string: s, fret: f });
+      }
     }
     let lo = Math.min(...notes.map((n) => n.fret));
     let hi = Math.max(...notes.map((n) => n.fret));
@@ -317,6 +322,9 @@ export function scalePositions(rootPc, scale, { maxFret = 17 } = {}) {
         full.push(opts[0]);
       }
     }
+    // The pentatonic outline can hold a note the scale doesn't (harmonic
+    // minor's b7): the fill above has already put the scale's own one in.
+    full = full.filter((n) => pcs.has(mod12(fretMidi(n.string, n.fret))));
     full.sort((x, y) => fretMidi(x.string, x.fret) - fretMidi(y.string, y.fret));
     lo = Math.min(...full.map((n) => n.fret));
     hi = Math.max(...full.map((n) => n.fret));
