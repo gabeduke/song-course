@@ -6,7 +6,7 @@ Static site, no build step. Songs are flat JSON files in [`songs/`](songs/).
 
 ## What's in it
 
-- **Practice book** (Book in the top bar): the warm-ups and reference drills you'd otherwise flip through books for, each one playable in any key and anywhere on the neck over a small band. A demo guitar plays it; mute it and play it yourself. **Move on** takes the drill to the next box, string set or fret, or the next key round the cycle of fourths, every few loops, without stopping. Each drill remembers its key, settings and tempo.
+- **Practice book** (the front page, and Book in the top bar): the warm-ups and reference drills you'd otherwise flip through books for, each one playable in any key and anywhere on the neck over a small band. A demo guitar plays it; mute it and play it yourself. **Move on** takes the drill to the next box, string set or fret, or the next key round the cycle of fourths, every few loops, without stopping. Each drill remembers its key, settings and tempo.
   - Warm-ups: chromatic spider (finger permutations), hammer-on/pull-off trills, one-minute chord changes, a subdivision ladder.
   - Technique: six strumming patterns over a progression, string skipping through a pentatonic box, octaves with the middle string muted, double stops in 3rds and 6ths.
   - Triads: inversions on each string set, the seven triads through a key, voice-led triads over a progression, and soloing over changes with triads.

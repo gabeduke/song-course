@@ -375,6 +375,8 @@ function route(opts) {
 }
 
 function routeNow({ force = false } = {}) {
+  // No address: the practice book is the front page.
+  if (/^#?\/?$/.test(location.hash)) history.replaceState(null, '', '#/book');
   const hash = parseHash();
   if (hash.view === 'book') {
     const drillId = drillById(hash.drillId) ? hash.drillId : null;

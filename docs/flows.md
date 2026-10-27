@@ -47,7 +47,7 @@ not here.
 
 | Id | Story — as Gabe I want to… | Flow | Status |
 |---|---|---|---|
-| J1.1 | pick a song and see what it drills: title, key, tempo, the first chord on the readout and its tones on the neck | `j1.1-open-song` | core |
+| J1.1 | open Woodshed on the practice book, then pick a song and see what it drills: title, key, tempo, the first chord on the readout and its tones on the neck | `j1.1-open-song` | core |
 | J1.2 | press Play and get a bar of count-in, then the band looping the section; the readout counts the bars, the neck follows the chords, Stop stops | `j1.2-play-loop` | core |
 | J1.3 | tap a section to loop it; in Whole song the band walks the arrangement, a tap jumps, and the page follows the section playing | `j1.3-sections` | core |
 | J1.4 | mute the part I'm going to play (the neck keeps showing it), or solo one to hear it alone, without the band stopping; turn a part down | `j1.4-mute-solo` | core |
