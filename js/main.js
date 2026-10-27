@@ -13,6 +13,10 @@ import { mountCapture } from './views/capture.js';
 import { midiIn } from './midi-in.js';
 import { createController } from './controller.js';
 import { mountKeyboardSheet, controlName } from './views/keyboard.js';
+import { mountBook, mountDrill, mountLesson } from './views/book.js';
+import { lessonById } from './lessons.js';
+import { drillById, buildDrill, advance, paramsLabel } from './drills.js';
+import { createSession, mmss } from './session.js';
 
 const prefs = loadPrefs();
 
@@ -32,6 +36,12 @@ const store = createStore({
   fb: { layer: 'chord', scale: null, position: 0, labels: prefs.labels ?? 'notes', triadSet: 'all', part: null, instrument: 'guitar', keysPart: null },
   lessonId: null,
   lessonFilter: 'guitar',
+  // the practice book: the open drill, its settings, and how it moves on
+  drillId: null,
+  bookLesson: null, // a book lesson's id, while its page is open
+  drill: null,
+  move: { how: null, every: 4 },
+  drillLoop: 0,
   playing: false,
   error: null,
 });
@@ -41,10 +51,19 @@ const player = new Player(engine, store);
 const songs = new Map(); // id -> { raw, source: 'repo' | 'draft', repoRaw }
 let compiled = null;
 let songRev = 0;
+let built = null; // the open drill, built: { raw, params, where, ref, neck }
+let lastSong = null; // the song the Songs links go back to
+const session = createSession();
 
 const app = {
-  store, engine, player, midiIn,
+  store, engine, player, midiIn, session,
   get song() { return compiled; },
+  get drill() { return built; },
+  get lastSong() { return lastSong; },
+  library: () => [...songs.values()].map((e) => e.raw),
+  loadDrill,
+  startSession,
+  goToItem,
   get raw() { return songs.get(store.state.songId)?.raw; },
   isDraft: (id) => songs.get(id ?? store.state.songId)?.source === 'draft',
   isEdited: (id) => !!songs.get(id ?? store.state.songId)?.repoRaw && songs.get(id ?? store.state.songId)?.source === 'draft',
@@ -144,10 +163,13 @@ function openSong(id, { keepState = false } = {}) {
     return true;
   }
   player.setSong(compiled);
+  built = null;
+  lastSong = id;
   const st = store.state;
   const sameSong = keepState && st.songId === id;
   store.set({
     songId: id,
+    drillId: null,
     error: null,
     sectionId: sameSong && compiled.sections[st.sectionId] ? st.sectionId : compiled.order[0],
     tempo: sameSong ? st.tempo : compiled.tempo,
@@ -200,6 +222,112 @@ function applyLesson(lesson) {
   });
 }
 
+// ------------------------------------------------------------------ drills
+
+/**
+ * Open a drill with these settings. While it plays the new settings swap
+ * in without a stop (a new key, the next box), so the band keeps going.
+ */
+function loadDrill(id, params) {
+  const drill = drillById(id);
+  if (!drill) return false;
+  const next = buildDrill(drill, params ?? drillPrefs(id).params);
+  const c = compileSong(next.raw);
+  const same = store.state.songId === `drill:${id}`;
+  compiled = c;
+  built = next;
+  if (same && player.playing) player.swapSong(c);
+  else player.setSong(c);
+  const saved = drillPrefs(id);
+  store.set({
+    songId: `drill:${id}`,
+    drillId: id,
+    drill: next.params,
+    sectionId: 'drill',
+    loopMode: 'section',
+    error: null,
+    tempo: same ? store.state.tempo : saved.tempo ?? drill.tempo,
+    mutes: same ? store.state.mutes : {},
+    solo: null,
+    selection: {},
+    lessonId: null,
+    move: same ? store.state.move : { how: null, every: 4, ...saved.move },
+    drillLoop: same ? store.state.drillLoop : 0,
+  });
+  saveDrillPrefs(id, { params: next.params });
+  document.title = `${drill.title} · Woodshed`;
+  return true;
+}
+
+function drillPrefs(id) {
+  return loadPrefs().drills?.[id] ?? {};
+}
+
+function saveDrillPrefs(id, patch) {
+  const prefs = loadPrefs();
+  const drills = prefs.drills ?? {};
+  drills[id] = { ...drills[id], ...patch };
+  savePrefs({ ...prefs, drills });
+}
+
+// Move on: every N loops the drill takes its next stop or key, on the one.
+player.onLoop = () => {
+  const st = store.state;
+  if (!built || !st.drillId) return;
+  const loop = st.drillLoop + 1;
+  const { how, every } = st.move;
+  if (how && loop >= every) {
+    loadDrill(st.drillId, advance(drillById(st.drillId), st.drill, how));
+    store.set({ drillLoop: 0 });
+  } else {
+    store.set({ drillLoop: loop });
+  }
+};
+
+// ------------------------------------------------------------------ session
+
+function startSession(index = 0) {
+  session.start(index);
+  goToItem();
+}
+
+/** Open the session's current item: its drill with its settings, or its song. */
+function goToItem() {
+  const item = session.current;
+  if (!item) return;
+  player.stop();
+  if (item.drill) {
+    saveDrillPrefs(item.drill, { params: item.params ?? {} });
+    const target = `#/book/${encodeURIComponent(item.drill)}`;
+    if (location.hash === target) route({ force: true });
+    else location.hash = target;
+  } else if (item.song) {
+    navigate(item.song, 'practice');
+  }
+}
+
+session.on(() => renderHeader());
+let dueShown = -1;
+setInterval(() => {
+  if (!session.active) return;
+  const el = document.getElementById('ss-clock');
+  const left = session.remaining();
+  if (el) {
+    el.textContent = left >= 0 ? `${mmss(left)} left` : `${mmss(left)} over`;
+    el.closest('.session-bar')?.classList.toggle('due', left < 0);
+  }
+  if (left < 0 && dueShown !== session.run.index) {
+    dueShown = session.run.index;
+    const nxt = session.routine[session.run.index + 1];
+    toast(nxt ? `Time’s up. Next: ${itemTitle(nxt)}` : 'Time’s up. That’s the session done.');
+  }
+}, 500);
+
+function itemTitle(item) {
+  if (item.drill) return drillById(item.drill)?.title ?? item.drill;
+  return songs.get(item.song)?.raw.title ?? item.song;
+}
+
 async function togglePlay() {
   if (!compiled) return;
   if (player.playing) {
@@ -218,6 +346,10 @@ player.addEventListener('state', (e) => store.set({ playing: e.detail.playing })
 // ------------------------------------------------------------------ routing
 
 function parseHash() {
+  const learn = /^#\/book\/learn\/([^/]+)\/?$/.exec(location.hash);
+  if (learn) return { view: 'book', drillId: null, lesson: decodeURIComponent(learn[1]) };
+  const book = /^#\/book(?:\/([^/]+))?\/?$/.exec(location.hash);
+  if (book) return { view: 'book', drillId: book[1] ? decodeURIComponent(book[1]) : null };
   const [, id, view] = /^#\/([^/]+)(?:\/(\w+))?/.exec(location.hash) ?? [];
   return { id: id && decodeURIComponent(id), view: ['practice', 'sheet', 'capture'].includes(view) ? view : 'practice' };
 }
@@ -228,21 +360,52 @@ function navigate(id, view = store.state.view) {
   else route();
 }
 
-function route() {
-  const { id, view } = parseHash();
+// While a route changes the song and the view together, the store's
+// listeners wait: the old view would otherwise be handed the new song.
+let routing = false;
+
+function route(opts) {
+  routing = true;
+  try {
+    routeNow(opts);
+  } finally {
+    routing = false;
+  }
+  renderShell();
+}
+
+function routeNow({ force = false } = {}) {
+  // No address: the practice book is the front page.
+  if (/^#?\/?$/.test(location.hash)) history.replaceState(null, '', '#/book');
+  const hash = parseHash();
+  if (hash.view === 'book') {
+    const drillId = drillById(hash.drillId) ? hash.drillId : null;
+    if (drillId && (force || store.state.songId !== `drill:${drillId}`)) {
+      player.stop();
+      loadDrill(drillId);
+      songRev++; // a fresh page for it, even when it's the drill already open
+    } else if (!drillId) {
+      // the book's contents or a lesson: nothing to play here
+      player.stop();
+      document.title = `${lessonById(hash.lesson)?.title ?? 'Practice book'} · Woodshed`;
+    }
+    store.set({ view: 'book', drillId, bookLesson: drillId ? null : lessonById(hash.lesson)?.id ?? null });
+    return;
+  }
+  // leaving the book for a song opens it afresh
+  const fromBook = store.state.view === 'book';
+  const { id, view } = hash;
   const fallback = songs.has('fire-on-the-mountain') ? 'fire-on-the-mountain' : [...songs.keys()][0];
   const songId = songs.has(id) ? id : fallback;
   if (!songId) {
     store.set({ error: 'No songs found. Add a song file to songs/ and list it in songs/index.json.' });
-    renderShell();
     return;
   }
-  if (songId !== store.state.songId) {
+  if (fromBook || songId !== store.state.songId) {
     player.stop();
     openSong(songId);
   }
   if (view !== store.state.view) store.set({ view });
-  renderShell();
 }
 
 // ------------------------------------------------------------------ shell
@@ -253,7 +416,7 @@ let mountedKey = '';
 
 function renderShell() {
   const st = store.state;
-  const key = `${st.songId}|${st.view}|${st.error ?? ''}|${songRev}`;
+  const key = `${st.songId}|${st.view}|${st.view === 'book' ? `${st.drillId}:${st.bookLesson}` : ''}|${st.error ?? ''}|${songRev}`;
   renderHeader();
   renderTransport();
   if (key === mountedKey && mounted) return;
@@ -266,6 +429,10 @@ function renderShell() {
     mounted = null;
     return;
   }
+  if (st.view === 'book') {
+    mounted = st.drillId ? mountDrill(main, app) : st.bookLesson ? mountLesson(main, app) : mountBook(main, app);
+    return;
+  }
   if (!compiled) return;
   const mount = { practice: mountPractice, sheet: mountSheet, capture: mountCapture }[st.view];
   mounted = mount(main, app);
@@ -274,17 +441,21 @@ function renderShell() {
 function renderHeader() {
   const st = store.state;
   const header = clear(document.getElementById('top'));
+  const inBook = st.view === 'book';
+  const songId = inBook ? lastSong ?? st.library[0]?.id : st.songId;
   const select = h('select.song-select', {
     'aria-label': 'Song',
-    onchange: (e) => navigate(e.target.value, st.view),
-  }, st.library.map((s) => h('option', { value: s.id, selected: s.id === st.songId },
+    onchange: (e) => navigate(e.target.value, inBook ? 'practice' : st.view),
+  }, st.library.map((s) => h('option', { value: s.id, selected: s.id === songId },
     `${s.title}${s.source === 'draft' ? (s.edited ? ' (edited)' : ' (draft)') : ''}`)));
   const tabs = h('nav.tabs', { 'aria-label': 'View' },
     [['practice', 'Practice'], ['sheet', 'Sheet'], ['capture', 'Capture']].map(([v, label]) =>
-      h('a', { href: `#/${encodeURIComponent(st.songId ?? '')}/${v}`, class: v === st.view ? 'on' : '', 'aria-current': v === st.view ? 'page' : undefined }, label)));
+      h('a', { href: `#/${encodeURIComponent(songId ?? '')}/${v}`, class: v === st.view ? 'on' : '', 'aria-current': v === st.view ? 'page' : undefined }, label)));
+  const book = h('a.book-tab', { href: '#/book', class: inBook ? 'on' : '', 'aria-current': inBook && !st.drillId ? 'page' : undefined, title: 'Warm-ups, triads, scales and your practice session' }, 'Book');
   const kb = app.controller;
   header.append(
     h('a.wordmark', { href: '#', title: 'Woodshed' }, h('span.wm-mark', { 'aria-hidden': 'true' }), 'Woodshed'),
+    book,
     select,
     tabs,
     h('button.kb-open', {
@@ -293,6 +464,26 @@ function renderHeader() {
       title: kb.connected ? `${kb.deviceName}: what its controls do here` : 'Connect a MIDI keyboard',
     }, h('span.kb-dot', { 'aria-hidden': 'true' }), h('span.kb-open-t', kb.connected ? kb.profile.name : 'Keyboard')),
   );
+  put(header, sessionBar());
+}
+
+/** While a session runs: where you are in it, the clock, and Next. */
+function sessionBar() {
+  const item = session.current;
+  if (!item) return null;
+  const { index } = session.run;
+  const paused = !session.run.since;
+  const drill = item.drill && drillById(item.drill);
+  const left = session.remaining();
+  return h('div.session-bar', { role: 'region', 'aria-label': 'Practice session', class: left < 0 ? 'due' : '' },
+    h('span.ss-kicker', `Session ${index + 1}/${session.routine.length}`),
+    h('button.ss-title', { type: 'button', onclick: goToItem, title: 'Go to it' },
+      h('strong', itemTitle(item)), drill ? h('span', paramsLabel(drill, item.params)) : null),
+    h('span.ss-clock#ss-clock', { 'aria-live': 'off' }, left >= 0 ? `${mmss(left)} left` : `${mmss(left)} over`),
+    h('div.ss-btns',
+      h('button.mini', { type: 'button', onclick: () => (paused ? session.resume() : session.pause()) }, paused ? 'Resume' : 'Pause'),
+      h('button.mini', { type: 'button', onclick: () => { session.next(); goToItem(); } }, session.run.index + 1 < session.routine.length ? 'Next' : 'Finish'),
+      h('button.mini', { type: 'button', onclick: () => session.end(), 'aria-label': 'End the session' }, 'End')));
 }
 
 // ------------------------------------------------------------------ keyboard
@@ -319,6 +510,10 @@ document.addEventListener('pointerdown', () => { if (midiIn.enabled && !engine.r
 function renderTransport() {
   const st = store.state;
   const bar = clear(document.getElementById('transport'));
+  if (st.view === 'book' && !st.drillId) {
+    bar.append(h('p.t-idle', 'Pick a drill, or start your session, and the band plays here.'));
+    return;
+  }
   if (!compiled) return;
   const sec = compiled.sections[st.sectionId];
   const tempoInput = h('input', {
@@ -385,11 +580,15 @@ player.addEventListener('count', (e) => {
 
 let lastShellKeys = '';
 store.on((st, patch) => {
+  if (routing) return;
   if ('tempo' in patch && player.playing) { /* read live by the scheduler */ }
   if ('volumes' in patch) for (const [k, v] of Object.entries(patch.volumes)) engine.setBusVolume(k, v);
   const shellKeys = JSON.stringify([st.songId, st.view, st.library.length, st.library.map((l) => l.source).join()]);
   if (shellKeys !== lastShellKeys) { lastShellKeys = shellKeys; renderHeader(); }
-  if (['playing', 'loopMode', 'countIn', 'click', 'sectionId', 'songId'].some((k) => k in patch)) renderTransport();
+  if ('tempo' in patch && st.drillId && st.songId === `drill:${st.drillId}`) saveDrillPrefs(st.drillId, { tempo: st.tempo });
+  if ('move' in patch && st.drillId) saveDrillPrefs(st.drillId, { move: st.move });
+  if ('drillId' in patch) renderHeader();
+  if (['playing', 'loopMode', 'countIn', 'click', 'sectionId', 'songId', 'drillId'].some((k) => k in patch)) renderTransport();
   else if ('tempo' in patch) syncTempo(st.tempo);
   if (['songId', 'view', 'error'].some((k) => k in patch)) renderShell();
   mounted?.update?.(st, patch);

@@ -6,6 +6,16 @@ Static site, no build step. Songs are flat JSON files in [`songs/`](songs/).
 
 ## What's in it
 
+- **Practice book** (the front page, and Book in the top bar): the warm-ups and reference drills you'd otherwise flip through books for, each one playable in any key and anywhere on the neck over a small band. A demo guitar plays it; mute it and play it yourself. **Move on** takes the drill to the next box, string set or fret, or the next key round the cycle of fourths, every few loops, without stopping. Each drill remembers its key, settings and tempo.
+  - Warm-ups: chromatic spider (finger permutations), hammer-on/pull-off trills, one-minute chord changes, a subdivision ladder.
+  - Technique: six strumming patterns over a progression, string skipping through a pentatonic box, octaves with the middle string muted, double stops in 3rds and 6ths.
+  - Triads: inversions on each string set, the seven triads through a key, voice-led triads over a progression, and soloing over changes with triads.
+  - Pentatonic: the five boxes (minor, major, blues), straight or in threes, fours and thirds; connecting neighbouring boxes.
+  - Scales: major, minor, the modes and harmonic minor in five positions, with the same patterns.
+  - The neck: one note on every string (through the cycle of fourths), and CAGED, a chord's five shapes up the neck.
+  - Ear training: the root, then a note of the key to name by ear; call and response, a phrase to play back in the bar after. The answers (notes lighting up, the tab) stay hidden until you ask for them.
+- **Session**: an ordered list of drills (each with its own key and settings) and songs, minutes apiece. Start it and a bar under the top bar runs the clock and steps you through, Next by Next.
+- **Lessons**: nine short reads in the book (soloing over changes with triads, triads and inversions, the pentatonic map, CAGED, the notes on the neck, timing, clean technique, ear training, how to practise), each linking the drills that practise it.
 - **Practice**: a big interactive fretboard (or keyboard) that follows the music. Layers for chord tones, three-string triads by string set, scale positions 1–5, or exactly what the chosen part is playing. Colours mean the same thing everywhere: amber root, teal third, periwinkle fifth, rose seventh.
 - **Backing band**: drums, bass, plucked guitar and electric piano, all synthesized in the browser. Every part has variations (strum patterns, triad voicings, bass lines, fills) you swap while it loops. Mute, solo, tempo, count-in, click, swing.
 - **Lessons**: an ordered set per song, split into tracks (Guitar, Keys, Drums, Synth). "Set up this exercise" loads the loop, tempo, variations and fretboard layer for you.
@@ -39,6 +49,10 @@ It needs to be served over HTTP (not opened as a file) so it can fetch the songs
 
 GitHub Pages: Settings → Pages → deploy from the `main` branch, root folder.
 
+## Adding a drill
+
+A drill is an entry in `DRILLS` in [`js/drills.js`](js/drills.js): its words (`title`, `goal`, `body`, `steps`), whether it's `keyed`, its `stops` (the places on the neck Move on walks through) and `options`, and `build(params)`, which answers the song file (a `demo` guitar part and a band; any variation type in [docs/song-format.md](docs/song-format.md) works), a `where` line for the readout, and `neck(chord, bar)`, the dots and shapes to draw. Set `ear: true` to keep the answers hidden until Show the notes. Add the drill's id to a lesson's `drills` in [`js/lessons.js`](js/lessons.js) so a lesson sends you to it. `npm test` builds every drill in every key and position and checks the notes stay on the neck and in the scale, and that every drill has a lesson.
+
 ## Adding a song
 
 1. Write `songs/my-song.json` (see [docs/song-format.md](docs/song-format.md)), or build it in Capture → Start a new song and download the file.
@@ -61,7 +75,10 @@ Edits made in the app live in your browser until you download the song file. The
 | `js/player.js` | Lookahead scheduler, looping, UI events on the audio clock |
 | `js/fretboard.js`, `js/piano.js` | Interactive SVG instruments |
 | `js/notation.js` | Notation and tab via VexFlow (vendored in `vendor/`) |
-| `js/views/` | Practice, Sheet and Capture pages |
+| `js/views/` | Practice, Sheet and Capture pages; `book.js` is the practice book, a lesson's page and a drill's page |
+| `js/drills.js` | The drills: each turns a key, a spot on the neck and its options into a song file the band plays; Move on; the starter session |
+| `js/lessons.js` | The book's lessons: the ideas behind the drills, and which drills practise each |
+| `js/session.js` | The practice session: the list, the clock, Next |
 | `js/midi-in.js`, `js/midi-file.js` | Web MIDI in and out, and `.mid` export |
 | `js/controller.js`, `js/devices.js` | What a keyboard's controls do in Woodshed; device profiles and Learn |
 | `js/views/keyboard.js` | The Keyboard sheet: the panel map, sound routing, Learn |

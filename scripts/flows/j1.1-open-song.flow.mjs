@@ -1,4 +1,5 @@
-// J1.1 Pick a song from the picker: it opens in Practice with its title,
+// J1.1 Woodshed opens on the practice book. Pick a song from the picker:
+// it opens in Practice with its title,
 // key, meter and tempo, the readout on its first chord and the neck lit
 // with that chord's tones. The address names it. docs/flows.md#j11
 const page = () => ({
@@ -19,7 +20,7 @@ export default {
     const { page: p } = t;
     await t.given('Woodshed is open', () => t.open());
     let s = await t.state();
-    t.expect('it opens on Fire on the Mountain, in Practice', s.songId === 'fire-on-the-mountain' && s.view === 'practice', s);
+    t.expect('it opens on the practice book, and the address says so', s.view === 'book' && !s.drillId && p.url().endsWith('#/book'), { view: s.view, url: p.url() });
     const first = await p.evaluate(page);
     t.expect('the picker lists the four starter songs', first.options.length === 4, first.options);
 

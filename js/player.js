@@ -17,6 +17,8 @@ export class Player extends EventTarget {
     // external(partId) is true for a part the keyboard plays instead.
     this.tap = null;
     this.external = null;
+    // Set by the app: called as a loop comes round, before its first step.
+    this.onLoop = null;
   }
 
   get playing() {
@@ -159,6 +161,9 @@ export class Player extends EventTarget {
       if (s.loopMode === 'song') {
         this.pos.arrIndex = (this.pos.arrIndex + 1) % this.song.arrangement.length;
       }
+      // Ahead of the loop's first step being scheduled, so whatever this
+      // swaps in (a drill moving to its next key) starts exactly on the one.
+      this.onLoop?.();
     }
   }
 
