@@ -1,0 +1,30 @@
+# external-dns publishes this CNAME so woodshed.leetserve.com resolves to
+# GitHub Pages, which serves the site from the repo's CNAME file and issues
+# the HTTPS certificate itself.
+#
+# Apply it to the homelab cluster before the CNAME file reaches main, or
+# Pages will redirect gabeduke.github.io/song-course/ to a name that doesn't
+# resolve yet:
+#   kubectl apply -f k8s/dns-endpoint.yaml
+#
+# It sits in dns-records, a namespace that holds records and never a
+# workload, as homelab's docs/plans/07-dns-endpoints-namespace.md lays out.
+# external-dns runs upsert-only, so deleting this won't remove the record;
+# retire the name in Route 53 by hand.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dns-records
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: woodshed
+  namespace: dns-records
+spec:
+  endpoints:
+    - dnsName: woodshed.leetserve.com
+      recordType: CNAME
+      targets:
+        - gabeduke.github.io
+      recordTTL: 300

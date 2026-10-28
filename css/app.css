@@ -475,6 +475,13 @@ input[type='range'] { accent-color: var(--accent); }
 .t-bpm strong { font: 700 1.3rem var(--font-display); font-variant-numeric: tabular-nums; }
 .t-bpm span { color: var(--muted); font-size: 0.8rem; }
 .t-tempo input[type='range'] { width: 130px; }
+.t-beats { display: flex; gap: 6px; margin-top: 4px; }
+.t-beats i { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--line); background: var(--raised); transition: background 60ms; }
+.t-beats i.accent { border-color: var(--root); }
+.t-beats i.off { opacity: 0.4; }
+.t-beats i.now { background: var(--third); border-color: var(--third); }
+.t-beats i.accent.now { background: var(--root); border-color: var(--root); }
+.t-tap { min-height: 36px; }
 .t-opts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-left: auto; }
 
 /* ------------------------------------------------------------ sheet */
@@ -554,6 +561,16 @@ input[type='range'] { accent-color: var(--accent); }
   max-width: calc(100vw - 32px);
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.update-bar {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 30;
+  bottom: calc(var(--transport-h) + 14px); width: max-content; max-width: calc(100vw - 2 * var(--gutter));
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+  padding: 10px 14px; border-radius: var(--radius-lg);
+  background: var(--surface); border: 1px solid var(--accent); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+.install { margin-top: 10px; }
+.install .fine { margin: 0; }
 
 /* ------------------------------------------------------------ responsive */
 
@@ -848,7 +865,6 @@ a.drill-card:hover, .dc-main:hover strong { border-color: var(--accent); color: 
 .drill-sheet .cb-open { stroke: var(--ink); }
 .drill-sheet .cb-string, .drill-sheet .cb-fret { stroke: #6b5d52; }
 
-.t-idle { margin: 0; color: var(--muted); font-weight: 700; }
 
 /* the session, under the top bar while it runs */
 .session-bar {

@@ -89,6 +89,8 @@ not here.
 | J8.4 | add a drill to my session in the key I want, start the session, and let the clock walk me through it: each item opens with its own settings, Pause stops the clock, Next goes on (to a song too), Finish ends it | `j8.4-session` | core (tablet, desktop, phone) |
 | J8.5 | read a lesson on its own page and open the drills that practise it; a drill links back to its lesson; soloing over changes shows the chord's triad lit and the key's other notes faint around it, moving with the chords | `j8.5-lessons` | core |
 | J8.6 | train my ear: call and response plays a phrase and leaves me a bar to answer; the neck and the tab keep the answer back until I ask for it; Round gives new phrases | `j8.6-ear` | core |
+| J9.1 | install Woodshed and practise with no connection: a manifest with real icons, the whole app saved once, and with the network gone the book, a drill and a song still open and play | `j9.1-offline` | core |
+| J9.2 | a metronome without starting a song: on the book and the lessons the transport clicks at its own tempo, with beats in a bar, 2 and 4 and tap tempo; it keeps going between those pages and stops for a drill, which keeps its own tempo and can borrow the metronome's with one tap | `j9.2-metronome` | core (tablet, desktop, phone) |
 | U1 | see the whole neck and Play on a song's first screen on the tablet, without scrolling | `u1-first-screen` | todo (tablet) |
 
 J2.4 and U1 are proposals from the first review, not stories Gabe has

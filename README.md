@@ -47,7 +47,15 @@ npm run serve        # or: python3 -m http.server 8000
 
 It needs to be served over HTTP (not opened as a file) so it can fetch the songs. Web MIDI works in Chrome, including Chrome on Android; plug a keyboard into the tablet with a USB-C OTG adapter.
 
-GitHub Pages: Settings → Pages → deploy from the `main` branch, root folder.
+GitHub Pages: Settings → Pages → deploy from the `main` branch, root folder. It's served at **https://woodshed.leetserve.com**: the `CNAME` file names the domain for Pages, and [`k8s/dns-endpoint.yaml`](k8s/dns-endpoint.yaml) is the external-dns record in the homelab cluster that points it at `gabeduke.github.io` (`kubectl apply -f k8s/dns-endpoint.yaml`). Once Pages shows the certificate, turn on Enforce HTTPS.
+
+### As an installed app (PWA)
+
+Woodshed installs like an app: **Install Woodshed** on the book's front page (or the install icon in Chrome's address bar), or on iPhone and iPad, Safari's Share → Add to Home Screen. Installed, it opens on the book in its own window and works with no connection: the service worker ([`sw.js`](sw.js)) saves every file the first time, songs and all. When a new version has been deployed it downloads in the background and offers a Reload, so it never swaps files under a band that's playing.
+
+- **After changing anything the site serves, run `npm run pwa`** and commit `sw.js` with the change. It rewrites the precache list and its version (a hash of every file), which is how an installed copy knows to update. `npm test` fails until you do.
+- The icons are rendered from `icons/icon.svg` and `icons/icon-maskable.svg` by `node scripts/build-icons.mjs` (it uses the flows' Playwright). Re-run it if you change either SVG.
+- On localhost the service worker stays off, so a reload always shows your edits. To try it locally, run `localStorage.setItem('woodshed.sw', 'on')` in the console and reload; flow J9.1 does the same.
 
 ## Adding a drill
 
@@ -79,6 +87,7 @@ Edits made in the app live in your browser until you download the song file. The
 | `js/drills.js` | The drills: each turns a key, a spot on the neck and its options into a song file the band plays; Move on; the starter session |
 | `js/lessons.js` | The book's lessons: the ideas behind the drills, and which drills practise each |
 | `js/session.js` | The practice session: the list, the clock, Next |
+| `js/pwa.js`, `sw.js`, `manifest.webmanifest` | Installing it as an app: the service worker that keeps it working offline, the Reload offer for a new version, the Install button |
 | `js/midi-in.js`, `js/midi-file.js` | Web MIDI in and out, and `.mid` export |
 | `js/controller.js`, `js/devices.js` | What a keyboard's controls do in Woodshed; device profiles and Learn |
 | `js/views/keyboard.js` | The Keyboard sheet: the panel map, sound routing, Learn |

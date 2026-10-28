@@ -17,6 +17,8 @@ import { mountBook, mountDrill, mountLesson } from './views/book.js';
 import { lessonById } from './lessons.js';
 import { drillById, buildDrill, advance, paramsLabel } from './drills.js';
 import { createSession, mmss } from './session.js';
+import { registerServiceWorker } from './pwa.js';
+import { Metronome, BEATS } from './metronome.js';
 
 const prefs = loadPrefs();
 
@@ -48,6 +50,7 @@ const store = createStore({
 
 const engine = new Engine();
 const player = new Player(engine, store);
+const metronome = new Metronome(engine);
 const songs = new Map(); // id -> { raw, source: 'repo' | 'draft', repoRaw }
 let compiled = null;
 let songRev = 0;
@@ -56,7 +59,7 @@ let lastSong = null; // the song the Songs links go back to
 const session = createSession();
 
 const app = {
-  store, engine, player, midiIn, session,
+  store, engine, player, midiIn, session, metronome,
   get song() { return compiled; },
   get drill() { return built; },
   get lastSong() { return lastSong; },
@@ -329,11 +332,16 @@ function itemTitle(item) {
 }
 
 async function togglePlay() {
+  if (metronomePage()) {
+    metronome.toggle();
+    return;
+  }
   if (!compiled) return;
   if (player.playing) {
     player.stop();
   } else {
     try {
+      metronome.stop();
       await player.start();
     } catch (e) {
       toast(`Audio couldn't start: ${e.message}`);
@@ -389,6 +397,9 @@ function routeNow({ force = false } = {}) {
       player.stop();
       document.title = `${lessonById(hash.lesson)?.title ?? 'Practice book'} · Woodshed`;
     }
+    // the metronome keeps going between the pages it lives on, and stops
+    // for a drill, which has its own click
+    if (drillId) metronome.stop();
     store.set({ view: 'book', drillId, bookLesson: drillId ? null : lessonById(hash.lesson)?.id ?? null });
     return;
   }
@@ -401,6 +412,7 @@ function routeNow({ force = false } = {}) {
     store.set({ error: 'No songs found. Add a song file to songs/ and list it in songs/index.json.' });
     return;
   }
+  metronome.stop();
   if (fromBook || songId !== store.state.songId) {
     player.stop();
     openSong(songId);
@@ -510,8 +522,8 @@ document.addEventListener('pointerdown', () => { if (midiIn.enabled && !engine.r
 function renderTransport() {
   const st = store.state;
   const bar = clear(document.getElementById('transport'));
-  if (st.view === 'book' && !st.drillId) {
-    bar.append(h('p.t-idle', 'Pick a drill, or start your session, and the band plays here.'));
+  if (metronomePage()) {
+    metronomeTransport(bar);
     return;
   }
   if (!compiled) return;
@@ -540,7 +552,11 @@ function renderTransport() {
       compiled.song.originalTempo ? h('button.link-btn', {
         type: 'button', title: 'Set the record tempo',
         onclick: () => store.set({ tempo: compiled.song.originalTempo }),
-      }, `Record: ${compiled.song.originalTempo}`) : null),
+      }, `Record: ${compiled.song.originalTempo}`) : null,
+      h('button.link-btn.t-met', {
+        type: 'button', title: 'Play this at the metronome’s tempo', hidden: metronome.settings.tempo === st.tempo,
+        onclick: () => store.set({ tempo: metronome.settings.tempo }),
+      }, `Metronome: ${metronome.settings.tempo}`)),
     h('div.t-opts',
       segmented('Loop', [{ value: 'section', label: 'Loop section' }, { value: 'song', label: 'Whole song' }], st.loopMode, (v) => store.set({ loopMode: v }), { small: true }),
       toggle('Count-in', st.countIn, (v) => { store.set({ countIn: v }); savePrefs({ ...loadPrefs(), countIn: v }); }),
@@ -548,6 +564,62 @@ function renderTransport() {
       h('button.btn.btn-quiet', { type: 'button', onclick: exportMidi, title: 'Download the backing as a MIDI file for your MPC or DAW' }, 'Export MIDI')),
   );
 }
+
+// ------------------------------------------------------------------ metronome
+
+/** The pages with nothing of their own to play: the transport is a metronome. */
+const metronomePage = () => store.state.view === 'book' && !store.state.drillId;
+
+function metronomeTransport(bar) {
+  const m = metronome.settings;
+  const nudge = (d) => metronome.set({ tempo: metronome.settings.tempo + d });
+  bar.append(
+    h('button.play', {
+      type: 'button',
+      'aria-label': metronome.playing ? 'Stop the metronome' : 'Start the metronome',
+      class: metronome.playing ? 'on' : '',
+      onclick: () => metronome.toggle(),
+    }, h('span.play-icon', { 'aria-hidden': 'true' })),
+    h('div.t-where',
+      h('span.t-sec', 'Metronome'),
+      h('span.t-beats#t-beats', { 'aria-hidden': 'true' },
+        Array.from({ length: m.beats }, (_, i) => h('i', { class: m.backbeat ? (i % 2 ? 'on2' : 'off') : i === 0 ? 'accent' : '' })))),
+    h('div.t-tempo',
+      h('button.icon-btn', { type: 'button', 'aria-label': 'Slower', onclick: () => nudge(-4) }, '−'),
+      h('label.t-bpm', h('strong', String(m.tempo)), h('span', 'bpm')),
+      h('button.icon-btn', { type: 'button', 'aria-label': 'Faster', onclick: () => nudge(4) }, '+'),
+      h('input', {
+        type: 'range', min: 30, max: 260, value: m.tempo, 'aria-label': 'Metronome tempo',
+        oninput: (e) => metronome.set({ tempo: Number(e.target.value) }),
+      }),
+      h('button.btn.btn-quiet.t-tap', { type: 'button', title: 'Tap a few times in time to set the tempo', onclick: () => metronome.tap() }, 'Tap')),
+    h('div.t-opts',
+      h('span.ctl-label', 'Beats'),
+      segmented('Beats in a bar', BEATS.map((n) => ({ value: n, label: String(n) })), m.beats, (v) => metronome.set({ beats: v }), { small: true }),
+      h('button.toggle', {
+        type: 'button', 'aria-pressed': String(m.backbeat), class: m.backbeat ? 'on' : '',
+        title: 'Click on 2 and 4 only, where the snare would be',
+        onclick: () => metronome.set({ backbeat: !m.backbeat }),
+      }, '2 and 4')),
+  );
+}
+
+metronome.addEventListener('state', () => { if (metronomePage()) renderTransport(); });
+metronome.addEventListener('change', (e) => {
+  if (!metronomePage()) return;
+  const bar = document.getElementById('transport');
+  const dots = bar.querySelectorAll('#t-beats i').length;
+  const toggled = bar.querySelector('button[aria-pressed][title^="Click on 2"]')?.getAttribute('aria-pressed') === 'true';
+  if (dots !== e.detail.beats || toggled !== e.detail.backbeat) { renderTransport(); return; }
+  const input = bar.querySelector('input[aria-label="Metronome tempo"]');
+  if (input && Number(input.value) !== e.detail.tempo) input.value = e.detail.tempo;
+  const bpm = bar.querySelector('.t-bpm strong');
+  if (bpm) bpm.textContent = String(e.detail.tempo);
+});
+metronome.addEventListener('beat', (e) => {
+  const dots = document.querySelectorAll('#t-beats i');
+  dots.forEach((d, i) => d.classList.toggle('now', i === e.detail.beat));
+});
 
 // The tempo changes in place: rebuilding the transport would swap the
 // slider out from under a drag.
@@ -557,6 +629,7 @@ function syncTempo(tempo) {
   if (input && Number(input.value) !== tempo) input.value = tempo;
   const bpm = bar.querySelector('.t-bpm strong');
   if (bpm) bpm.textContent = String(tempo);
+  bar.querySelector('.t-met')?.toggleAttribute('hidden', tempo === metronome.settings.tempo);
 }
 
 function toggle(label, on, onChange) {
@@ -622,6 +695,17 @@ window.addEventListener('hashchange', route);
   route();
   // a keyboard allowed before connects again by itself
   midiIn.resume();
+  registerServiceWorker({ onUpdate: offerUpdate });
 })();
+
+/** A new version has downloaded: offer it, rather than reload under the band. */
+function offerUpdate(apply) {
+  document.querySelector('.update-bar')?.remove();
+  const bar = h('div.update-bar', { role: 'status' },
+    h('span', 'A new version of Woodshed is ready.'),
+    h('button.btn', { type: 'button', onclick: () => { player.stop(); apply(); } }, 'Reload'),
+    h('button.link-btn', { type: 'button', onclick: () => bar.remove() }, 'Later'));
+  document.body.append(bar);
+}
 
 export { app, pcName, prefersFlats, SCALES };
