@@ -49,6 +49,14 @@ It needs to be served over HTTP (not opened as a file) so it can fetch the songs
 
 GitHub Pages: Settings → Pages → deploy from the `main` branch, root folder.
 
+### As an installed app (PWA)
+
+Woodshed installs like an app: **Install Woodshed** on the book's front page (or the install icon in Chrome's address bar), or on iPhone and iPad, Safari's Share → Add to Home Screen. Installed, it opens on the book in its own window and works with no connection: the service worker ([`sw.js`](sw.js)) saves every file the first time, songs and all. When a new version has been deployed it downloads in the background and offers a Reload, so it never swaps files under a band that's playing.
+
+- **After changing anything the site serves, run `npm run pwa`** and commit `sw.js` with the change. It rewrites the precache list and its version (a hash of every file), which is how an installed copy knows to update. `npm test` fails until you do.
+- The icons are rendered from `icons/icon.svg` and `icons/icon-maskable.svg` by `node scripts/build-icons.mjs` (it uses the flows' Playwright). Re-run it if you change either SVG.
+- On localhost the service worker stays off, so a reload always shows your edits. To try it locally, run `localStorage.setItem('woodshed.sw', 'on')` in the console and reload; flow J9.1 does the same.
+
 ## Adding a drill
 
 A drill is an entry in `DRILLS` in [`js/drills.js`](js/drills.js): its words (`title`, `goal`, `body`, `steps`), whether it's `keyed`, its `stops` (the places on the neck Move on walks through) and `options`, and `build(params)`, which answers the song file (a `demo` guitar part and a band; any variation type in [docs/song-format.md](docs/song-format.md) works), a `where` line for the readout, and `neck(chord, bar)`, the dots and shapes to draw. Set `ear: true` to keep the answers hidden until Show the notes. Add the drill's id to a lesson's `drills` in [`js/lessons.js`](js/lessons.js) so a lesson sends you to it. `npm test` builds every drill in every key and position and checks the notes stay on the neck and in the scale, and that every drill has a lesson.
@@ -79,6 +87,7 @@ Edits made in the app live in your browser until you download the song file. The
 | `js/drills.js` | The drills: each turns a key, a spot on the neck and its options into a song file the band plays; Move on; the starter session |
 | `js/lessons.js` | The book's lessons: the ideas behind the drills, and which drills practise each |
 | `js/session.js` | The practice session: the list, the clock, Next |
+| `js/pwa.js`, `sw.js`, `manifest.webmanifest` | Installing it as an app: the service worker that keeps it working offline, the Reload offer for a new version, the Install button |
 | `js/midi-in.js`, `js/midi-file.js` | Web MIDI in and out, and `.mid` export |
 | `js/controller.js`, `js/devices.js` | What a keyboard's controls do in Woodshed; device profiles and Learn |
 | `js/views/keyboard.js` | The Keyboard sheet: the panel map, sound routing, Learn |

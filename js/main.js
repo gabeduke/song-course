@@ -17,6 +17,7 @@ import { mountBook, mountDrill, mountLesson } from './views/book.js';
 import { lessonById } from './lessons.js';
 import { drillById, buildDrill, advance, paramsLabel } from './drills.js';
 import { createSession, mmss } from './session.js';
+import { registerServiceWorker } from './pwa.js';
 
 const prefs = loadPrefs();
 
@@ -622,6 +623,17 @@ window.addEventListener('hashchange', route);
   route();
   // a keyboard allowed before connects again by itself
   midiIn.resume();
+  registerServiceWorker({ onUpdate: offerUpdate });
 })();
+
+/** A new version has downloaded: offer it, rather than reload under the band. */
+function offerUpdate(apply) {
+  document.querySelector('.update-bar')?.remove();
+  const bar = h('div.update-bar', { role: 'status' },
+    h('span', 'A new version of Woodshed is ready.'),
+    h('button.btn', { type: 'button', onclick: () => { player.stop(); apply(); } }, 'Reload'),
+    h('button.link-btn', { type: 'button', onclick: () => bar.remove() }, 'Later'));
+  document.body.append(bar);
+}
 
 export { app, pcName, prefersFlats, SCALES };

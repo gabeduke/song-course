@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Full bleed: the platform crops it to its own shape. The marks sit
+       inside the central safe circle (radius 204). -->
+  <rect width="512" height="512" fill="#3a281f"/>
+  <circle cx="192" cy="256" r="64" fill="#f0b13f"/>
+  <circle cx="332.8" cy="179.2" r="51.2" fill="#4fc1b0"/>
+  <circle cx="332.8" cy="332.8" r="51.2" fill="#8d9bf2"/>
+</svg>

@@ -24,7 +24,7 @@ export const PROFILES = {
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript',
   '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
-  '.md': 'text/markdown', '.ico': 'image/x-icon',
+  '.md': 'text/markdown', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json',
 };
 
 // serve answers the repo root over HTTP on a free port, as GitHub Pages
