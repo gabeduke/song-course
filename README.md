@@ -47,7 +47,7 @@ npm run serve        # or: python3 -m http.server 8000
 
 It needs to be served over HTTP (not opened as a file) so it can fetch the songs. Web MIDI works in Chrome, including Chrome on Android; plug a keyboard into the tablet with a USB-C OTG adapter.
 
-GitHub Pages: Settings → Pages → deploy from the `main` branch, root folder.
+GitHub Pages: Settings → Pages → deploy from the `main` branch, root folder. It's served at **https://woodshed.leetserve.com**: the `CNAME` file names the domain for Pages, and [`k8s/dns-endpoint.yaml`](k8s/dns-endpoint.yaml) is the external-dns record in the homelab cluster that points it at `gabeduke.github.io` (`kubectl apply -f k8s/dns-endpoint.yaml`). Once Pages shows the certificate, turn on Enforce HTTPS.
 
 ### As an installed app (PWA)
 
