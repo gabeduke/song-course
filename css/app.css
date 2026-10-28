@@ -555,6 +555,16 @@ input[type='range'] { accent-color: var(--accent); }
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+.update-bar {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 30;
+  bottom: calc(var(--transport-h) + 14px); width: max-content; max-width: calc(100vw - 2 * var(--gutter));
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+  padding: 10px 14px; border-radius: var(--radius-lg);
+  background: var(--surface); border: 1px solid var(--accent); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+.install { margin-top: 10px; }
+.install .fine { margin: 0; }
+
 /* ------------------------------------------------------------ responsive */
 
 @media (max-width: 960px) {

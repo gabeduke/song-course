@@ -12,6 +12,7 @@ import {
   DRILLS, CATEGORIES, KEYS, drillById, advanceChoices, paramsLabel,
 } from '../drills.js';
 import { LESSONS, lessonById, lessonsFor } from '../lessons.js';
+import { pwa } from '../pwa.js';
 import { renderNotation } from '../notation.js';
 import { variationDetail } from '../parts-ui.js';
 
@@ -22,11 +23,21 @@ const FINGER_LEGEND = [['root', 'Index'], ['third', 'Middle'], ['fifth', 'Ring']
 
 export function mountBook(root, app) {
   const { session } = app;
+  // Install it as an app: a button where the browser offers it, the Share
+  // menu on iPhone and iPad, nothing once it's installed.
+  const installSlot = h('div.install');
+  const renderInstall = () => put(clear(installSlot),
+    pwa.installed ? null
+      : pwa.canInstall ? h('button.btn.btn-quiet', { type: 'button', onclick: () => pwa.install() }, 'Install Woodshed')
+        : pwa.ios ? h('p.fine', 'To keep Woodshed on your home screen and use it offline: Share, then Add to Home Screen.') : null);
+  renderInstall();
+  const offInstall = pwa.on(renderInstall);
   const sessionCard = h('section.book-card.book-session', { 'aria-label': 'Your session' });
   root.append(
     h('header.book-hero',
       h('h1', 'Practice book'),
-      h('p.lede', 'The warm-ups, technique, triads, scales and ear training you’d flip through the books for, in any key and anywhere on the neck, with a band to play them over. Read a lesson, line the drills up into a session, and the clock walks you through it.')),
+      h('p.lede', 'The warm-ups, technique, triads, scales and ear training you’d flip through the books for, in any key and anywhere on the neck, with a band to play them over. Read a lesson, line the drills up into a session, and the clock walks you through it.'),
+      installSlot),
     h('div.book-top', sessionCard, lessonsCard()),
     ...CATEGORIES.map((cat) => h('section.book-cat', { 'aria-labelledby': `cat-${cat.id}` },
       h('div.panel-head', h('h2', { id: `cat-${cat.id}` }, cat.title), h('p.muted', cat.blurb)),
@@ -82,7 +93,7 @@ export function mountBook(root, app) {
 
   renderSession();
   const off = session.on(renderSession);
-  return { update() {}, destroy() { off(); } };
+  return { update() {}, destroy() { off(); offInstall(); } };
 }
 
 function lessonsCard() {
