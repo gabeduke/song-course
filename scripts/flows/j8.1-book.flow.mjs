@@ -18,13 +18,13 @@ export default {
       lessons: document.querySelectorAll('.book-lessons .lessons-index li').length,
       cats: [...document.querySelectorAll('.book-cat h2')].map((x) => x.textContent),
       drills: document.querySelectorAll('a.drill-card[data-drill]').length,
-      idle: document.querySelector('#transport .t-idle')?.textContent ?? '',
+      metronome: document.querySelector('#transport button.play')?.getAttribute('aria-label') ?? '',
     }));
     t.expect('my session is there, the starter list of eight', contents.session === 8, contents);
     t.expect('the nine lessons are listed', contents.lessons === 9, contents);
     t.expect('warm-ups, technique, triads, pentatonic, scales, the neck, ear training and the songs', JSON.stringify(contents.cats) === JSON.stringify(['Warm-ups', 'Technique', 'Triads', 'Pentatonic', 'Scales', 'The neck', 'Ear training', 'Songs']), contents.cats);
     t.expect('nineteen drills to pick from', contents.drills === 19, contents);
-    t.expect('the transport says to pick one', /Pick a drill/.test(contents.idle), contents.idle);
+    t.expect('the transport is a metronome, ready to start', contents.metronome === 'Start the metronome', contents.metronome);
 
     await t.step('tap The five pentatonic boxes', () => t.tap(page.locator('a.drill-card[data-drill="pentatonic-boxes"]')));
     s = await t.until((x) => x.drillId === 'pentatonic-boxes');

@@ -14,7 +14,7 @@
 // - Anything else (other origins, non-GET) goes to the network untouched.
 
 // <precache> written by scripts/build-sw.mjs: don't edit by hand
-const VERSION = 'a20a68c3b191';
+const VERSION = '0a6e131e4817';
 const FILES = [
   './css/app.css',
   './css/fm-lab.css',
@@ -39,6 +39,7 @@ const FILES = [
   './js/labs.js',
   './js/lessons.js',
   './js/main.js',
+  './js/metronome.js',
   './js/midi-file.js',
   './js/midi-in.js',
   './js/notation.js',

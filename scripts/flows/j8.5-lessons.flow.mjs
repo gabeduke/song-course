@@ -24,7 +24,7 @@ export default {
     t.expect('it reads on its own page, the address says so', s.view === 'book' && !s.drillId && page.url().endsWith('#/book/learn/soloing-over-changes') && lesson.title === 'Soloing over chord changes', { url: page.url(), lesson });
     t.expect('the method in steps, triads first', lesson.heads.length >= 5 && lesson.heads[1] === '1. See each chord as a triad', lesson.heads);
     t.expect('with the drills that practise it, and the next lesson', lesson.drills.includes('triad-solo') && lesson.drills.includes('rhythm-ladder') && lesson.next === 'Next: Triads and inversions →', lesson);
-    t.expect('the transport has nothing to play', await page.locator('#transport .t-idle').isVisible());
+    t.expect('the transport is the metronome', await page.locator('#transport button.play[aria-label="Start the metronome"]').isVisible());
 
     await t.step('tap Solo over changes with triads', () => t.tap(page.locator('.lesson-page a.drill-card[data-drill="triad-solo"]')));
     s = await t.until((x) => x.drillId === 'triad-solo');
